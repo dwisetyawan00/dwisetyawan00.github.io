@@ -18,22 +18,22 @@
         body, html {
             height: 100%;
             width: 100%;
-            margin: 0;
-            padding: 0;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             font-family: 'Space Grotesk', sans-serif;
             color: #ffffff;
-            overflow: hidden;
+            line-height: 1.6;
         }
         
         .container {
             display: flex;
-            height: 100vh;
-            width: 100vw;
+            min-height: 100vh;
+            max-width: 1800px;
+            margin: 0 auto;
         }
         
         .profile-section {
             width: 40%;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -41,12 +41,15 @@
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             border-right: 1px solid rgba(255, 255, 255, 0.125);
+            position: sticky;
+            top: 0;
+            height: 100vh;
         }
         
         .profile-card {
             text-align: center;
-            padding: 30px;
-            position: relative;
+            padding: 2rem;
+            max-width: 400px;
         }
         
         .profile-image {
@@ -55,7 +58,12 @@
             border-radius: 50%;
             object-fit: contain;
             border: 4px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-image:hover {
+            transform: scale(1.05);
         }
         
         .title {
@@ -64,55 +72,63 @@
             font-weight: 700;
             background: linear-gradient(45deg, #00f0ff, #5000ca);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            margin-bottom: 1rem;
         }
         
         .subtitle {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #b0b0b0;
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
         }
         
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
+            gap: 1.5rem;
         }
         
         .social-link {
             color: #ffffff;
             font-size: 1.5rem;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
         }
         
         .social-link:hover {
             color: #00f0ff;
+            transform: translateY(-3px);
         }
         
         .tutorials-section {
             width: 60%;
-            display: flex;
-            flex-direction: column;
-            padding: 30px;
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            align-content: start;
             overflow-y: auto;
+            max-height: 100vh;
         }
         
         .tutorial-card {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 15px;
+            padding: 1.5rem;
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: center;
-            transition: transform 0.3s ease;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .tutorial-card:hover {
-            transform: scale(1.02);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
         }
         
         .tutorial-info {
@@ -120,26 +136,69 @@
         }
         
         .tutorial-title {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #fff;
         }
         
         .tutorial-description {
             color: #b0b0b0;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
         
         .tutorial-link {
+            display: inline-block;
             color: #00f0ff;
             text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
             background: rgba(0, 240, 255, 0.1);
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
         }
         
         .tutorial-link:hover {
             background: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .profile-section,
+            .tutorials-section {
+                width: 100%;
+            }
+            
+            .profile-section {
+                height: auto;
+                position: relative;
+            }
+            
+            .tutorials-section {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .profile-image {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .tutorials-section {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
         }
     </style>
 </head>
@@ -179,26 +238,25 @@
                     <div class="tutorial-title">PWRchain Node Tutorial</div>
                     <div class="tutorial-description">Auto Install & Setup up PWRchain Node</div>
                 </div>
-                <a href="https://github.com/dwisetyawan00/PWR-Chain/blob/main/README.md" class="tutorial-link">Learn More</a>
+                <a href="https://github.com/dwisetyawan00/PWR-Chain/blob/main/README.md" target="_blank" class="tutorial-link">Learn More</a>
             </div>
-                <div class="tutorial-card">
+
+            <div class="tutorial-card">
                 <div class="tutorial-info">
                     <div class="tutorial-title">Citrea Node Tutorial</div>
                     <div class="tutorial-description">Auto Install & Setup up Citrea Node</div>
                 </div>
-                <a href="https://github.com/dwisetyawan00/Citrea-Node/blob/main/README.md" class="tutorial-link">Learn More</a>
-        </div>
+                <a href="https://github.com/dwisetyawan00/Citrea-Node/blob/main/README.md" target="_blank" class="tutorial-link">Learn More</a>
             </div>
-                <div class="tutorial-card">
+
+            <div class="tutorial-card">
                 <div class="tutorial-info">
                     <div class="tutorial-title">Story Node Tutorial</div>
                     <div class="tutorial-description">Auto Install & Setup up Story Node</div>
                 </div>
-                <a href="https://github.com/dwisetyawan00/Story-node/blob/main/README.md" class="tutorial-link">Learn More</a>
-        </div>
+                <a href="https://github.com/dwisetyawan00/Story-node/blob/main/README.md" target="_blank" class="tutorial-link">Learn More</a>
             </div>
         </div>
-            </div>
     </div>
 </body>
 </html>
