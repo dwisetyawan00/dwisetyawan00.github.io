@@ -114,6 +114,7 @@
         }
         
         .tutorial-card {
+            position: relative;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             padding: 1.5rem;
@@ -166,6 +167,35 @@
         .tutorial-link:hover {
             background: rgba(0, 240, 255, 0.2);
             box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
+        }
+
+        .new-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 8px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         @media (max-width: 1024px) {
@@ -262,6 +292,7 @@
             </div>
 
             <div class="tutorial-card">
+                <div class="new-badge">New</div>
                 <div class="tutorial-info">
                     <div class="tutorial-title">Eoracle Node Tutorial</div>
                     <div class="tutorial-description">Auto Install & Setup up Eoracle Node</div>
