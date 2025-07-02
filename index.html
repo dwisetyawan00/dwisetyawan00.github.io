@@ -1,361 +1,511 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TECHZS - Web3 & TESTNET Enthusiast</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/dwisetyawan00/logo/refs/heads/main/au_ah_transparant.png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>Al-Qur'an Digital</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Grotesk:wght@300;400;600&display=swap');
-        
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
-        
-        body, html {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            font-family: 'Space Grotesk', sans-serif;
-            color: #ffffff;
-            line-height: 1.6;
-        }
-        
-        .container {
-            display: flex;
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
-            max-width: 1800px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
-        
-        .profile-section {
-            width: 40%;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(255, 255, 255, 0.125);
-            position: sticky;
-            top: 0;
-            height: 100vh;
-        }
-        
-        .profile-card {
+
+        .header {
             text-align: center;
-            padding: 2rem;
-            max-width: 400px;
-        }
-        
-        .profile-image {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: contain;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 2rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .profile-image:hover {
-            transform: scale(1.05);
-        }
-        
-        .title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #00f0ff, #5000ca);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            color: #b0b0b0;
-            margin-bottom: 2rem;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-        }
-        
-        .social-link {
-            color: #ffffff;
-            font-size: 1.5rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            padding: 0.5rem;
-        }
-        
-        .social-link:hover {
-            color: #00f0ff;
-            transform: translateY(-3px);
-        }
-        
-        .tutorials-section {
-            width: 60%;
-            padding: 3rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            align-content: start;
-            overflow-y: auto;
-            max-height: 100vh;
-        }
-        
-        .tutorial-card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
             border-radius: 15px;
-            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            gap: 1rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
-        .tutorial-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .tutorial-info {
-            flex-grow: 1;
-        }
-        
-        .tutorial-title {
-            font-size: 1.25rem;
+
+        .input-group label {
             font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: #fff;
+            margin-bottom: 5px;
+            color: #1e3c72;
         }
-        
-        .tutorial-description {
-            color: #b0b0b0;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-        
-        .tutorial-link {
-            display: inline-block;
-            color: #00f0ff;
-            text-decoration: none;
-            padding: 0.75rem 1.25rem;
+
+        .input-group select,
+        .input-group input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
-            background: rgba(0, 240, 255, 0.1);
+            font-size: 16px;
             transition: all 0.3s ease;
-            text-align: center;
-            font-weight: 500;
-            width: 100%;
-        }
-        
-        .tutorial-link:hover {
-            background: rgba(0, 240, 255, 0.2);
-            box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
         }
 
-        .new-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: linear-gradient(45deg, #007bff, #00d4ff);
+        .input-group select:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 10px rgba(30, 60, 114, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 3px 6px;
+            padding: 12px 25px;
+            border: none;
             border-radius: 8px;
-            font-size: 0.6rem;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+        }
+
+        .ayah-container {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        .ayah-container:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .ayah-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .ayah-number {
+            background: #1e3c72;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            animation: pulse 2s infinite;
-            z-index: 1;
+            margin-right: 10px;
         }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
+        .surah-info {
+            color: #666;
+            font-size: 14px;
+            margin-left: auto;
         }
 
-        @media (max-width: 1024px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .profile-section,
-            .tutorials-section {
-                width: 100%;
-            }
-            
-            .profile-section {
-                height: auto;
-                position: relative;
-            }
-            
-            .tutorials-section {
-                padding: 2rem;
-            }
+        .arabic-text {
+            font-size: 24px;
+            line-height: 1.8;
+            text-align: right;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            font-family: 'Traditional Arabic', 'Amiri', serif;
+            direction: rtl;
         }
 
-        @media (max-width: 640px) {
-            .title {
-                font-size: 2rem;
-            }
-            
-            .profile-image {
-                width: 150px;
-                height: 150px;
-            }
-            
-            .tutorials-section {
+        .translation {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .error {
+            background: #ffe6e6;
+            color: #d63384;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .surah-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .surah-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .surah-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #1e3c72;
+        }
+
+        .surah-card h3 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .surah-card p {
+            color: #666;
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        @media (max-width: 768px) {
+            .search-grid {
                 grid-template-columns: 1fr;
-                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="profile-section">
-            <div class="profile-card">
-                <img src="https://raw.githubusercontent.com/dwisetyawan00/logo/refs/heads/main/au_ah_transparant.png" alt="Profile Logo" class="profile-image">
-                <div class="title">TECHZS</div>
-                <div class="subtitle">Web3 & TESTNET Enthusiast</div>
-                
-                <div class="social-links">
-                    <a href="https://github.com/dwisetyawan00" target="_blank" class="social-link">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://twitter.com/galxedrop" target="_blank" class="social-link">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="https://t.me/Ethdenvers" target="_blank" class="social-link">
-                        <i class="fab fa-telegram"></i>
-                    </a>
+        <div class="header">
+            <h1>🕌 Al-Qur'an Digital</h1>
+            <p>Mushaf Al-Qur'an lengkap dengan terjemahan Bahasa Indonesia</p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-grid">
+                <div class="input-group">
+                    <label for="surahSelect">Pilih Surat:</label>
+                    <select id="surahSelect">
+                        <option value="">-- Pilih Surat --</option>
+                    </select>
                 </div>
+                <div class="input-group">
+                    <label for="ayahInput">Nomor Ayat:</label>
+                    <input type="number" id="ayahInput" min="1" placeholder="Masukkan nomor ayat">
+                </div>
+                <div class="input-group">
+                    <label for="juzSelect">Pilih Juz:</label>
+                    <select id="juzSelect">
+                        <option value="">-- Pilih Juz --</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="pageInput">Halaman:</label>
+                    <input type="number" id="pageInput" min="1" max="604" placeholder="1-604">
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button class="btn" onclick="searchAyah()">🔍 Cari Ayat</button>
+                <button class="btn" onclick="showAllSurahs()">📋 Daftar Semua Surat</button>
+                <button class="btn" onclick="loadRandomAyah()">🎲 Ayat Acak</button>
             </div>
         </div>
-        
-        <div class="tutorials-section">
-            <!-- Existing Tutorials -->
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Chainbase Node Tutorial</div>
-                    <div class="tutorial-description">Comprehensive guide for setting up Chainbase node</div>
-                </div>
-                <a href="https://github.com/dwisetyawan00/Basechain-node" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
-            
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">PWRchain Node Tutorial</div>
-                    <div class="tutorial-description">Auto Install & Setup up PWRchain Node</div>
-                </div>
-                <a href="https://github.com/dwisetyawan00/PWR-Chain/blob/main/README.md" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
 
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Citrea Node Tutorial</div>
-                    <div class="tutorial-description">Auto Install & Setup up Citrea Node</div>
+        <div class="content-section">
+            <div id="content">
+                <div class="loading">
+                    <p>Selamat datang di Al-Qur'an Digital</p>
+                    <p>Gunakan fitur pencarian di atas untuk membaca ayat-ayat Al-Qur'an</p>
                 </div>
-                <a href="https://github.com/dwisetyawan00/Citrea-Node/blob/main/README.md" target="_blank" class="tutorial-link">Learn More</a>
             </div>
-
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Story Node Tutorial</div>
-                    <div class="tutorial-description">Auto Install & Setup up Story Node</div>
-                </div>
-                <a href="https://github.com/dwisetyawan00/Story-node/blob/main/README.md" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
-
-            <div class="tutorial-card">
-                <div class="new-badge">New</div>
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Eoracle Node Tutorial</div>
-                    <div class="tutorial-description">Auto Install & Setup up Eoracle Node</div>
-                </div>
-                <a href="https://github.com/dwisetyawan00/eoracle-node/blob/main/README.md" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
-
-            <!-- Template for New Tutorials (Hidden) -->
-            <!-- Tutorial 6 -->
-            <!--
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Tutorial 6</div>
-                    <div class="tutorial-description">Description for Tutorial 6</div>
-                </div>
-                <a href="#" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
-            -->
-
-            <!-- Tutorial 7 -->
-            <!--
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Tutorial 7</div>
-                    <div class="tutorial-description">Description for Tutorial 7</div>
-                </div>
-                <a href="#" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
-            -->
-
-            <!-- Tutorial 8 -->
-            <!--
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Tutorial 8</div>
-                    <div class="tutorial-description">Description for Tutorial 8</div>
-                </div>
-                <a href="#" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
-            -->
-
-            <!-- Tutorial 9 -->
-            <!--
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Tutorial 9</div>
-                    <div class="tutorial-description">Description for Tutorial 9</div>
-                </div>
-                <a href="#" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
-            -->
-
-            <!-- Tutorial 10 -->
-            <!--
-            <div class="tutorial-card">
-                <div class="tutorial-info">
-                    <div class="tutorial-title">Tutorial 10</div>
-                    <div class="tutorial-description">Description for Tutorial 10</div>
-                </div>
-                <a href="#" target="_blank" class="tutorial-link">Learn More</a>
-            </div>
-            -->
         </div>
     </div>
+
+    <script>
+        let quranData = {};
+        let surahList = [];
+        
+        // Load Quran data from API
+        async function loadQuranData() {
+            try {
+                showLoading('Memuat data Al-Qur\'an...');
+                
+                // Load surah list
+                const surahResponse = await fetch('https://api.quran.com/api/v4/chapters');
+                const surahData = await surahResponse.json();
+                surahList = surahData.chapters;
+                
+                populateSurahSelect();
+                populateJuzSelect();
+                
+                document.getElementById('content').innerHTML = `
+                    <div class="loading">
+                        <h3>✅ Data Al-Qur'an berhasil dimuat!</h3>
+                        <p>Silakan gunakan fitur pencarian untuk membaca ayat-ayat Al-Qur'an</p>
+                        <p>Total: ${surahList.length} surat tersedia</p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                showError('Gagal memuat data Al-Qur\'an. Pastikan koneksi internet Anda stabil.');
+                console.error('Error loading Quran data:', error);
+            }
+        }
+        
+        function populateSurahSelect() {
+            const select = document.getElementById('surahSelect');
+            select.innerHTML = '<option value="">-- Pilih Surat --</option>';
+            
+            surahList.forEach(surah => {
+                const option = document.createElement('option');
+                option.value = surah.id;
+                option.textContent = `${surah.id}. ${surah.name_simple} (${surah.translated_name.name})`;
+                select.appendChild(option);
+            });
+        }
+        
+        function populateJuzSelect() {
+            const select = document.getElementById('juzSelect');
+            select.innerHTML = '<option value="">-- Pilih Juz --</option>';
+            
+            for (let i = 1; i <= 30; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Juz ${i}`;
+                select.appendChild(option);
+            }
+        }
+        
+        async function searchAyah() {
+            const surahId = document.getElementById('surahSelect').value;
+            const ayahNumber = document.getElementById('ayahInput').value;
+            const juzNumber = document.getElementById('juzSelect').value;
+            const pageNumber = document.getElementById('pageInput').value;
+            
+            if (!surahId && !juzNumber && !pageNumber) {
+                showError('Silakan pilih surat, juz, atau halaman terlebih dahulu.');
+                return;
+            }
+            
+            try {
+                showLoading('Mencari ayat...');
+                
+                let apiUrl = '';
+                let displayTitle = '';
+                
+                if (surahId) {
+                    const surah = surahList.find(s => s.id == surahId);
+                    apiUrl = `https://api.quran.com/api/v4/verses/by_chapter/${surahId}?language=id&words=false&translations=33`;
+                    displayTitle = `${surah.name_simple} (${surah.translated_name.name})`;
+                    
+                    if (ayahNumber) {
+                        apiUrl += `&verse_key=${surahId}:${ayahNumber}`;
+                        displayTitle += ` - Ayat ${ayahNumber}`;
+                    }
+                } else if (juzNumber) {
+                    apiUrl = `https://api.quran.com/api/v4/verses/by_juz/${juzNumber}?language=id&words=false&translations=33`;
+                    displayTitle = `Juz ${juzNumber}`;
+                } else if (pageNumber) {
+                    apiUrl = `https://api.quran.com/api/v4/verses/by_page/${pageNumber}?language=id&words=false&translations=33`;
+                    displayTitle = `Halaman ${pageNumber}`;
+                }
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.verses && data.verses.length > 0) {
+                    displayVerses(data.verses, displayTitle);
+                } else {
+                    showError('Ayat tidak ditemukan.');
+                }
+                
+            } catch (error) {
+                showError('Terjadi kesalahan saat mencari ayat.');
+                console.error('Error searching ayah:', error);
+            }
+        }
+        
+        async function loadRandomAyah() {
+            try {
+                showLoading('Memuat ayat acak...');
+                
+                const randomSurah = Math.floor(Math.random() * 114) + 1;
+                const surah = surahList.find(s => s.id === randomSurah);
+                const randomAyah = Math.floor(Math.random() * surah.verses_count) + 1;
+                
+                const apiUrl = `https://api.quran.com/api/v4/verses/by_key/${randomSurah}:${randomAyah}?language=id&words=false&translations=33`;
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.verse) {
+                    displayVerses([data.verse], `Ayat Acak - ${surah.name_simple} (${surah.translated_name.name}) : ${randomAyah}`);
+                } else {
+                    showError('Gagal memuat ayat acak.');
+                }
+                
+            } catch (error) {
+                showError('Terjadi kesalahan saat memuat ayat acak.');
+                console.error('Error loading random ayah:', error);
+            }
+        }
+        
+        function showAllSurahs() {
+            let html = '<h2>📋 Daftar Semua Surat Al-Qur\'an</h2>';
+            html += '<div class="surah-list">';
+            
+            surahList.forEach(surah => {
+                html += `
+                    <div class="surah-card" onclick="loadSurah(${surah.id})">
+                        <h3>${surah.id}. ${surah.name_simple}</h3>
+                        <p><strong>${surah.translated_name.name}</strong></p>
+                        <p>Jumlah Ayat: ${surah.verses_count}</p>
+                        <p>Diturunkan di: ${surah.revelation_place}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            document.getElementById('content').innerHTML = html;
+        }
+        
+        async function loadSurah(surahId) {
+            try {
+                showLoading('Memuat surat...');
+                
+                const surah = surahList.find(s => s.id === surahId);
+                const apiUrl = `https://api.quran.com/api/v4/verses/by_chapter/${surahId}?language=id&words=false&translations=33`;
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.verses && data.verses.length > 0) {
+                    displayVerses(data.verses, `${surah.name_simple} (${surah.translated_name.name})`);
+                } else {
+                    showError('Gagal memuat surat.');
+                }
+                
+            } catch (error) {
+                showError('Terjadi kesalahan saat memuat surat.');
+                console.error('Error loading surah:', error);
+            }
+        }
+        
+        function displayVerses(verses, title) {
+            let html = `<h2>${title}</h2>`;
+            
+            verses.forEach(verse => {
+                const translation = verse.translations && verse.translations[0] ? verse.translations[0].text : 'Terjemahan tidak tersedia';
+                
+                html += `
+                    <div class="ayah-container">
+                        <div class="ayah-header">
+                            <div class="ayah-number">${verse.verse_key}</div>
+                            <div class="surah-info">
+                                Juz ${verse.juz_number} | Halaman ${verse.page_number} | Hizb ${verse.hizb_number}
+                            </div>
+                        </div>
+                        <div class="arabic-text">${verse.text_uthmani}</div>
+                        <div class="translation">${translation}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('content').innerHTML = html;
+        }
+        
+        function showLoading(message) {
+            document.getElementById('content').innerHTML = `
+                <div class="loading">
+                    <p>⏳ ${message}</p>
+                </div>
+            `;
+        }
+        
+        function showError(message) {
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <strong>❌ Error:</strong> ${message}
+                </div>
+            `;
+        }
+        
+        // Event listeners
+        document.getElementById('surahSelect').addEventListener('change', function() {
+            const ayahInput = document.getElementById('ayahInput');
+            if (this.value) {
+                const surah = surahList.find(s => s.id == this.value);
+                ayahInput.max = surah.verses_count;
+                ayahInput.placeholder = `1-${surah.verses_count}`;
+            } else {
+                ayahInput.max = '';
+                ayahInput.placeholder = 'Masukkan nomor ayat';
+            }
+        });
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuranData();
+        });
+    </script>
 </body>
 </html>
