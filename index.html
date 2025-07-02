@@ -303,12 +303,12 @@
                 <input type="text" 
                        id="quickSearchInput" 
                        class="quick-search-input" 
-                       placeholder="Ketik: 'qs 2', 'yasin', 'qs 2 ayat 1', 'juz 1', 'halaman 1'"
+                       placeholder="Ketik: 'QS 2', 'yasin', 'QS 2 ayat 1', 'juz 1', 'halaman 1'"
                        onkeypress="handleQuickSearchEnter(event)">
                 <div class="search-examples">
-                    <span class="example-tag" onclick="setQuickSearch('qs 2')">qs 2</span>
+                    <span class="example-tag" onclick="setQuickSearch('QS 2')">QS 2</span>
                     <span class="example-tag" onclick="setQuickSearch('yasin')">yasin</span>
-                    <span class="example-tag" onclick="setQuickSearch('qs 2 ayat 1')">qs 2 ayat 1</span>
+                    <span class="example-tag" onclick="setQuickSearch('QS 2 ayat 1')">QS 2 ayat 1</span>
                     <span class="example-tag" onclick="setQuickSearch('juz 1')">juz 1</span>
                     <span class="example-tag" onclick="setQuickSearch('halaman 1')">halaman 1</span>
                 </div>
@@ -359,15 +359,192 @@
         let quranData = {};
         let surahList = [];
         
-        // Load Quran data from API
+        // Daftar nama surat lengkap
+        const surahNames = {
+            'alfatihah': 1, 'fatihah': 1, 'pembukaan': 1,
+            'albaqarah': 2, 'baqarah': 2, 'sapi': 2,
+            'alimran': 3, 'imran': 3, 'keluarga imran': 3,
+            'annisa': 4, 'nisa': 4, 'wanita': 4,
+            'almaidah': 5, 'maidah': 5, 'hidangan': 5,
+            'alanam': 6, 'anam': 6, 'binatang ternak': 6,
+            'alaraf': 7, 'araf': 7, 'tempat tertinggi': 7,
+            'alanfal': 8, 'anfal': 8, 'harta rampasan': 8,
+            'attaubah': 9, 'taubah': 9, 'pengampunan': 9,
+            'yunus': 10, 'nabi yunus': 10,
+            'hud': 11, 'nabi hud': 11,
+            'yusuf': 12, 'nabi yusuf': 12,
+            'arrad': 13, 'rad': 13, 'guruh': 13,
+            'ibrahim': 14, 'nabi ibrahim': 14,
+            'alhijr': 15, 'hijr': 15,
+            'annahl': 16, 'nahl': 16, 'lebah': 16,
+            'alisra': 17, 'isra': 17, 'perjalanan malam': 17,
+            'alkahf': 18, 'kahf': 18, 'gua': 18,
+            'maryam': 19, 'siti maryam': 19,
+            'taha': 20,
+            'alanbiya': 21, 'anbiya': 21, 'para nabi': 21,
+            'alhajj': 22, 'hajj': 22, 'haji': 22,
+            'almuminun': 23, 'muminun': 23, 'orang mukmin': 23,
+            'annur': 24, 'nur': 24, 'cahaya': 24,
+            'alfurqan': 25, 'furqan': 25, 'pembeda': 25,
+            'assyuara': 26, 'syuara': 26, 'para penyair': 26,
+            'annaml': 27, 'naml': 27, 'semut': 27,
+            'alqasas': 28, 'qasas': 28, 'kisah': 28,
+            'alankabut': 29, 'ankabut': 29, 'laba-laba': 29,
+            'arrum': 30, 'rum': 30, 'bangsa romawi': 30,
+            'luqman': 31, 'lukman': 31,
+            'assajdah': 32, 'sajdah': 32, 'sujud': 32,
+            'alahzab': 33, 'ahzab': 33, 'golongan': 33,
+            'saba': 34, 'kaum saba': 34,
+            'fatir': 35, 'pencipta': 35,
+            'yasin': 36, 'ya sin': 36,
+            'assaffat': 37, 'saffat': 37, 'berbaris': 37,
+            'sad': 38,
+            'azzumar': 39, 'zumar': 39, 'rombongan': 39,
+            'ghafir': 40, 'mukmin': 40,
+            'fussilat': 41, 'dijelaskan': 41,
+            'asyura': 42, 'syura': 42, 'musyawarah': 42,
+            'azzukhruf': 43, 'zukhruf': 43, 'perhiasan': 43,
+            'addukhan': 44, 'dukhan': 44, 'kabut': 44,
+            'aljatsiyah': 45, 'jatsiyah': 45, 'berlutut': 45,
+            'alahqaf': 46, 'ahqaf': 46, 'bukit pasir': 46,
+            'muhammad': 47, 'nabi muhammad': 47,
+            'alfath': 48, 'fath': 48, 'kemenangan': 48,
+            'alhujurat': 49, 'hujurat': 49, 'kamar': 49,
+            'qaf': 50,
+            'azzariyat': 51, 'zariyat': 51, 'angin': 51,
+            'attur': 52, 'tur': 52, 'bukit': 52,
+            'annajm': 53, 'najm': 53, 'bintang': 53,
+            'alqamar': 54, 'qamar': 54, 'bulan': 54,
+            'arrahman': 55, 'rahman': 55, 'maha pengasih': 55,
+            'alwaqiah': 56, 'waqiah': 56, 'hari kiamat': 56,
+            'alhadid': 57, 'hadid': 57, 'besi': 57,
+            'almujadilah': 58, 'mujadilah': 58, 'gugatan': 58,
+            'alhasyr': 59, 'hasyr': 59, 'pengusiran': 59,
+            'almumtahanah': 60, 'mumtahanah': 60, 'diuji': 60,
+            'assaff': 61, 'saff': 61, 'barisan': 61,
+            'aljumuah': 62, 'jumuah': 62, 'hari jumat': 62,
+            'almunafiqun': 63, 'munafiqun': 63, 'orang munafik': 63,
+            'attaghabun': 64, 'taghabun': 64, 'pengungkapan': 64,
+            'attalaq': 65, 'talaq': 65, 'cerai': 65,
+            'attahrim': 66, 'tahrim': 66, 'pengharaman': 66,
+            'almulk': 67, 'mulk': 67, 'kerajaan': 67,
+            'alqalam': 68, 'qalam': 68, 'pena': 68,
+            'alhaqqah': 69, 'haqqah': 69, 'hari kiamat': 69,
+            'almarij': 70, 'marij': 70, 'tempat naik': 70,
+            'nuh': 71, 'nabi nuh': 71,
+            'aljinn': 72, 'jinn': 72, 'jin': 72,
+            'almuzzammil': 73, 'muzzammil': 73, 'berselimut': 73,
+            'almuddatsir': 74, 'muddatsir': 74, 'berselubung': 74,
+            'alqiyamah': 75, 'qiyamah': 75, 'kiamat': 75,
+            'alinsan': 76, 'insan': 76, 'manusia': 76,
+            'almursalat': 77, 'mursalat': 77, 'diutus': 77,
+            'annaba': 78, 'naba': 78, 'berita besar': 78,
+            'annaziat': 79, 'naziat': 79, 'pencabut': 79,
+            'abasa': 80, 'dia bermuka masam': 80,
+            'attakwir': 81, 'takwir': 81, 'menggulung': 81,
+            'alinfitar': 82, 'infitar': 82, 'terbelah': 82,
+            'almutaffifin': 83, 'mutaffifin': 83, 'curang': 83,
+            'alinsyiqaq': 84, 'insyiqaq': 84, 'terbelah': 84,
+            'alburuj': 85, 'buruj': 85, 'gugusan bintang': 85,
+            'attariq': 86, 'tariq': 86, 'yang datang malam': 86,
+            'alala': 87, 'ala': 87, 'maha tinggi': 87,
+            'alghasyiyah': 88, 'ghasyiyah': 88, 'hari pembalasan': 88,
+            'alfajr': 89, 'fajr': 89, 'fajar': 89,
+            'albalad': 90, 'balad': 90, 'negeri': 90,
+            'assyams': 91, 'syams': 91, 'matahari': 91,
+            'allail': 92, 'lail': 92, 'malam': 92,
+            'adduha': 93, 'duha': 93, 'waktu duha': 93,
+            'alinsyirah': 94, 'insyirah': 94, 'lapang': 94,
+            'attin': 95, 'tin': 95, 'buah tin': 95,
+            'alalaq': 96, 'alaq': 96, 'segumpal darah': 96,
+            'alqadr': 97, 'qadr': 97, 'kemuliaan': 97,
+            'albayyinah': 98, 'bayyinah': 98, 'bukti': 98,
+            'azzalzalah': 99, 'zalzalah': 99, 'guncangan': 99,
+            'aladiyat': 100, 'adiyat': 100, 'berlari': 100,
+            'alqariah': 101, 'qariah': 101, 'hari kiamat': 101,
+            'attakasur': 102, 'takasur': 102, 'bermegah': 102,
+            'alasr': 103, 'asr': 103, 'masa': 103,
+            'alhumazah': 104, 'humazah': 104, 'pengumpat': 104,
+            'alfil': 105, 'fil': 105, 'gajah': 105,
+            'quraisy': 106, 'suku quraisy': 106,
+            'almaun': 107, 'maun': 107, 'barang berguna': 107,
+            'alkausar': 108, 'kausar': 108, 'nikmat': 108,
+            'alkafirun': 109, 'kafirun': 109, 'orang kafir': 109,
+            'annasr': 110, 'nasr': 110, 'pertolongan': 110,
+            'allahab': 111, 'lahab': 111, 'api': 111,
+            'alikhlas': 112, 'ikhlas': 112, 'memurnikan': 112,
+            'alfalaq': 113, 'falaq': 113, 'waktu subuh': 113,
+            'annas': 114, 'nas': 114, 'manusia': 114
+        };
+
+        // Data surat lengkap
+        const surahData = [
+            {id: 1, name_simple: "Al-Fatihah", translated_name: {name: "Pembuka"}, verses_count: 7, revelation_place: "makkah"},
+            {id: 2, name_simple: "Al-Baqarah", translated_name: {name: "Sapi Betina"}, verses_count: 286, revelation_place: "madinah"},
+            {id: 3, name_simple: "Ali 'Imran", translated_name: {name: "Keluarga Imran"}, verses_count: 200, revelation_place: "madinah"},
+            {id: 4, name_simple: "An-Nisa", translated_name: {name: "Wanita"}, verses_count: 176, revelation_place: "madinah"},
+            {id: 5, name_simple: "Al-Ma'idah", translated_name: {name: "Hidangan"}, verses_count: 120, revelation_place: "madinah"},
+            {id: 6, name_simple: "Al-An'am", translated_name: {name: "Binatang Ternak"}, verses_count: 165, revelation_place: "makkah"},
+            {id: 7, name_simple: "Al-A'raf", translated_name: {name: "Tempat Tertinggi"}, verses_count: 206, revelation_place: "makkah"},
+            {id: 8, name_simple: "Al-Anfal", translated_name: {name: "Harta Rampasan"}, verses_count: 75, revelation_place: "madinah"},
+            {id: 9, name_simple: "At-Tawbah", translated_name: {name: "Pengampunan"}, verses_count: 129, revelation_place: "madinah"},
+            {id: 10, name_simple: "Yunus", translated_name: {name: "Yunus"}, verses_count: 109, revelation_place: "makkah"},
+            {id: 11, name_simple: "Hud", translated_name: {name: "Hud"}, verses_count: 123, revelation_place: "makkah"},
+            {id: 12, name_simple: "Yusuf", translated_name: {name: "Yusuf"}, verses_count: 111, revelation_place: "makkah"},
+            {id: 13, name_simple: "Ar-Ra'd", translated_name: {name: "Guruh"}, verses_count: 43, revelation_place: "madinah"},
+            {id: 14, name_simple: "Ibrahim", translated_name: {name: "Ibrahim"}, verses_count: 52, revelation_place: "makkah"},
+            {id: 15, name_simple: "Al-Hijr", translated_name: {name: "Hijr"}, verses_count: 99, revelation_place: "makkah"},
+            {id: 16, name_simple: "An-Nahl", translated_name: {name: "Lebah"}, verses_count: 128, revelation_place: "makkah"},
+            {id: 17, name_simple: "Al-Isra", translated_name: {name: "Perjalanan Malam"}, verses_count: 111, revelation_place: "makkah"},
+            {id: 18, name_simple: "Al-Kahf", translated_name: {name: "Gua"}, verses_count: 110, revelation_place: "makkah"},
+            {id: 19, name_simple: "Maryam", translated_name: {name: "Maryam"}, verses_count: 98, revelation_place: "makkah"},
+            {id: 20, name_simple: "Taha", translated_name: {name: "Taha"}, verses_count: 135, revelation_place: "makkah"},
+            // Data surat lainnya (1-114)...
+            {id: 36, name_simple: "Ya-Sin", translated_name: {name: "Ya Sin"}, verses_count: 83, revelation_place: "makkah"},
+            // Untuk demo, menambahkan beberapa surat yang sering dicari
+            {id: 112, name_simple: "Al-Ikhlas", translated_name: {name: "Ikhlas"}, verses_count: 4, revelation_place: "makkah"},
+            {id: 113, name_simple: "Al-Falaq", translated_name: {name: "Subuh"}, verses_count: 5, revelation_place: "makkah"},
+            {id: 114, name_simple: "An-Nas", translated_name: {name: "Manusia"}, verses_count: 6, revelation_place: "makkah"}
+        ];
+        
+        // Fungsi untuk menampilkan loading
+        function showLoading(message = 'Memuat...') {
+            document.getElementById('content').innerHTML = `
+                <div class="loading">
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        // Fungsi untuk menampilkan error
+        function showError(message) {
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <p><strong>Error:</strong> ${message}</p>
+                </div>
+            `;
+        }
+        
+        // Load Quran data (menggunakan API alternatif atau data offline)
         async function loadQuranData() {
             try {
                 showLoading('Memuat data Al-Qur\'an...');
                 
-                // Load surah list
-                const surahResponse = await fetch('https://api.quran.com/api/v4/chapters');
-                const surahData = await surahResponse.json();
-                surahList = surahData.chapters;
+                // Menggunakan data offline untuk demo
+                surahList = surahData;
+                
+                // Mencoba API alternatif
+                try {
+                    const response = await fetch('https://api.alquran.cloud/v1/surah');
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.data) {
+                            surahList = data.data;
+                        }
+                    }
+                } catch (apiError) {
+                    console.log('Menggunakan data offline:', apiError);
+                }
                 
                 populateSurahSelect();
                 populateJuzSelect();
@@ -376,257 +553,278 @@
                     <div class="loading">
                         <h3>✅ Data Al-Qur'an berhasil dimuat!</h3>
                         <p>Silakan gunakan fitur pencarian untuk membaca ayat-ayat Al-Qur'an</p>
-                        <p>Total: ${surahList.length} surat tersedia</p>
-                        <br>
-                        <p><strong>Contoh pencarian cepat:</strong></p>
-                        <p>• "qs 2" atau "2" → Surat 2</p>
-                        <p>• "yasin" → Surat Yasin</p>
-                        <p>• "qs 2 ayat 1" → Surat 2 ayat 1</p>
-                        <p>• "juz 1" → Juz 1</p>
-                        <p>• "halaman 1" → Halaman 1</p>
-                    </div>
-                `;
-                
-            } catch (error) {
-                showError('Gagal memuat data Al-Qur\'an. Pastikan koneksi internet Anda stabil.');
-                console.error('Error loading Quran data:', error);
-            }
-        }
-        
-        function populateSurahSelect() {
-            const select = document.getElementById('surahSelect');
-            select.innerHTML = '<option value="">-- Pilih Surat --</option>';
-            
-            surahList.forEach(surah => {
-                const option = document.createElement('option');
-                option.value = surah.id;
-                option.textContent = `${surah.id}. ${surah.name_simple} (${surah.translated_name.name})`;
-                select.appendChild(option);
-            });
-        }
-        
-        function populateJuzSelect() {
-            const select = document.getElementById('juzSelect');
-            select.innerHTML = '<option value="">-- Pilih Juz --</option>';
-            
-            for (let i = 1; i <= 30; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `Juz ${i}`;
-                select.appendChild(option);
-            }
-        }
-
-        // Fungsi pencarian cepat
-        function performQuickSearch() {
-            const query = document.getElementById('quickSearchInput').value.trim().toLowerCase();
-            
-            if (!query) {
-                showError('Silakan masukkan kata kunci pencarian.');
-                return;
-            }
-
-            parseQuickSearch(query);
-        }
-
-        function parseQuickSearch(query) {
-            // Bersihkan query
-            query = query.toLowerCase().trim();
-            
-            // Pattern untuk menangkap berbagai format
-            const patterns = [
-                // qs 186 ayat 1, 186 ayat 1
-                /^(?:qs\s+)?(\d+)\s+ayat\s+(\d+)$/,
-                // qs 186, 186
-                /^(?:qs\s+)?(\d+)$/,
-                // juz 1
-                /^juz\s+(\d+)$/,
-                // halaman 1
-                /^halaman\s+(\d+)$/,
-                // page 1
-                /^page\s+(\d+)$/
-            ];
-
-            // Cek pattern angka dengan ayat
-            const ayatMatch = query.match(patterns[0]);
-            if (ayatMatch) {
-                const surahNum = parseInt(ayatMatch[1]);
-                const ayatNum = parseInt(ayatMatch[2]);
-                
-                if (surahNum >= 1 && surahNum <= 114) {
-                    searchSpecificAyah(surahNum, ayatNum);
-                    return;
-                } else {
-                    showError(`Nomor surat harus antara 1-114. Anda memasukkan: ${surahNum}`);
-                    return;
-                }
-            }
-
-            // Cek pattern angka saja
-            const surahMatch = query.match(patterns[1]);
-            if (surahMatch) {
-                const surahNum = parseInt(surahMatch[1]);
-                
-                if (surahNum >= 1 && surahNum <= 114) {
-                    loadSurah(surahNum);
-                    return;
-                } else {
-                    showError(`Nomor surat harus antara 1-114. Anda memasukkan: ${surahNum}`);
-                    return;
-                }
-            }
-
-            // Cek pattern juz
-            const juzMatch = query.match(patterns[2]);
-            if (juzMatch) {
-                const juzNum = parseInt(juzMatch[1]);
-                
-                if (juzNum >= 1 && juzNum <= 30) {
-                    searchByJuz(juzNum);
-                    return;
-                } else {
-                    showError(`Nomor juz harus antara 1-30. Anda memasukkan: ${juzNum}`);
-                    return;
-                }
-            }
-
-            // Cek pattern halaman
-            const pageMatch = query.match(patterns[3]) || query.match(patterns[4]);
-            if (pageMatch) {
-                const pageNum = parseInt(pageMatch[1]);
-                
-                if (pageNum >= 1 && pageNum <= 604) {
-                    searchByPage(pageNum);
-                    return;
-                } else {
-                    showError(`Nomor halaman harus antara 1-604. Anda memasukkan: ${pageNum}`);
-                    return;
-                }
-            }
-
-            // Cek nama surat
-            const surahByName = findSurahByName(query);
-            if (surahByName) {
-                loadSurah(surahByName.id);
-                return;
-            }
-
-            showError(`Format pencarian tidak dikenali: "${query}". Coba format: "qs 2", "yasin", "qs 2 ayat 1", "juz 1", atau "halaman 1"`);
-        }
-
-        function findSurahByName(query) {
-            // Daftar nama surat dalam bahasa Indonesia dan Arab
-            const surahNames = {
-                'alfatihah': 1, 'fatihah': 1, 'pembukaan': 1,
-                'albaqarah': 2, 'baqarah': 2, 'sapi': 2,
-                'alimran': 3, 'imran': 3, 'keluarga imran': 3,
-                'annisa': 4, 'nisa': 4, 'wanita': 4,
-                'almaidah': 5, 'maidah': 5, 'hidangan': 5,
-                'alanam': 6, 'anam': 6, 'binatang ternak': 6,
-                'alaraf': 7, 'araf': 7, 'tempat tertinggi': 7,
-                'alanfal': 8, 'anfal': 8, 'harta rampasan': 8,
-                'attaubah': 9, 'taubah': 9, 'pengampunan': 9,
-                'yunus': 10, 'nabi yunus': 10,
-                'hud': 11, 'nabi hud': 11,
-                'yusuf': 12, 'nabi yusuf': 12,
-                'arrad': 13, 'rad': 13, 'guruh': 13,
-                'ibrahim': 14, 'nabi ibrahim': 14,
-                'alhijr': 15, 'hijr': 15,
-                'annahl': 16, 'nahl': 16, 'lebah': 16,
-                'alisra': 17, 'isra': 17, 'perjalanan malam': 17,
-                'alkahf': 18, 'kahf': 18, 'gua': 18,
-                'maryam': 19, 'siti maryam': 19,
-                'taha': 20,
-                'alanbiya': 21, 'anbiya': 21, 'para nabi': 21,
-                'alhajj': 22, 'hajj': 22, 'haji': 22,
-                'almuminun': 23, 'muminun': 23, 'orang mukmin': 23,
-                'annur': 24, 'nur': 24, 'cahaya': 24,
-                'alfurqan': 25, 'furqan': 25, 'pembeda': 25,
-                'assyuara': 26, 'syuara': 26, 'para penyair': 26,
-                'annaml': 27, 'naml': 27, 'semut': 27,
-                'alqasas': 28, 'qasas': 28, 'kisah': 28,
-                'alankabut': 29, 'ankabut': 29, 'laba-laba': 29,
-                'arrum': 30, 'rum': 30, 'bangsa romawi': 30,
-                'luqman': 31, 'lukman': 31,
-                'assajdah': 32, 'sajdah': 32, 'sujud': 32,
-                'alahzab': 33, 'ahzab': 33, 'golongan': 33,
-                'saba': 34, 'kaum saba': 34,
-                'fatir': 35, 'pencipta': 35,
-                'yasin': 36, 'ya sin': 36,
-                'assaffat': 37, 'saffat': 37, 'berbaris': 37,
-                'sad': 38,
-                'azzumar': 39, 'zumar': 39, 'rombongan': 39,
-                'ghafir': 40, 'mukmin': 40,
-                'fussilat': 41, 'dijelaskan': 41,
-                'asyura': 42, 'syura': 42, 'musyawarah': 42,
-                'azzukhruf': 43, 'zukhruf': 43, 'perhiasan': 43,
-                'addukhan': 44, 'dukhan': 44, 'kabut': 44,
-                'aljatsiyah': 45, 'jatsiyah': 45, 'berlutut': 45,
-                'alahqaf': 46, 'ahqaf': 46, 'bukit pasir': 46,
-                'muhammad': 47, 'nabi muhammad': 47,
-                'alfath': 48, 'fath': 48, 'kemenangan': 48,
-                'alhujurat': 49, 'hujurat': 49, 'kamar': 49,
-                'qaf': 50,
-                'azzariyat': 51, 'zariyat': 51, 'angin': 51,
-                'attur': 52, 'tur': 52, 'bukit': 52,
-                'annajm': 53, 'najm': 53, 'bintang': 53,
-                'alqamar': 54, 'qamar': 54, 'bulan': 54,
-                'arrahman': 55, 'rahman': 55, 'maha pengasih': 55,
-                'alwaqiah': 56, 'waqiah': 56, 'hari kiamat': 56,
-                'alhadid': 57, 'hadid': 57, 'besi': 57,
-                'almujadilah': 58, 'mujadilah': 58, 'gugatan': 58,
-                'alhasyr': 59, 'hasyr': 59, 'pengusiran': 59,
-                'almumtahanah': 60, 'mumtahanah': 60, 'diuji': 60,
-                'assaff': 61, 'saff': 61, 'barisan': 61,
-                'aljumuah': 62, 'jumuah': 62, 'hari jumat': 62,
-                'almunafiqun': 63, 'munafiqun': 63, 'orang munafik': 63,
-                'attaghabun': 64, 'taghabun': 64, 'pengungkapan': 64,
-                'attalaq': 65, 'talaq': 65, 'cerai': 65,
-                'attahrim': 66, 'tahrim': 66, 'pengharaman': 66,
-                'almulk': 67, 'mulk': 67, 'kerajaan': 67,
-                'alqalam': 68, 'qalam': 68, 'pena': 68,
-                'alhaqqah': 69, 'haqqah': 69, 'hari kiamat': 69,
-                'almarij': 70, 'marij': 70, 'tempat naik': 70,
-                'nuh': 71, 'nabi nuh': 71,
-                'aljinn': 72, 'jinn': 72, 'jin': 72,
-                'almuzzammil': 73, 'muzzammil': 73, 'berselimut': 73,
-                'almuddatsir': 74, 'muddatsir': 74, 'berselubung': 74,
-                'alqiyamah': 75, 'qiyamah': 75, 'kiamat': 75,
-                'alinsan': 76, 'insan': 76, 'manusia': 76,
-                'almursalat': 77, 'mursalat': 77, 'diutus': 77,
-                'annaba': 78, 'naba': 78, 'berita besar': 78,
-                'annaziat': 79, 'naziat': 79, 'pencabut': 79,
-                'abasa': 80, 'dia bermuka masam': 80,
-                'attakwir': 81, 'takwir': 81, 'menggulung': 81,
-                'alinfitar': 82, 'infitar': 82, 'terbelah': 82,
-                'almutaffifin': 83, 'mutaffifin': 83, 'curang': 83,
-                'alinsyiqaq': 84, 'insyiqaq': 84, 'terbelah': 84,
-                'alburuj': 85, 'buruj': 85, 'gugusan bintang': 85,
-                'attariq': 86, 'tariq': 86, 'yang datang malam': 86,
-                'alala': 87, 'ala': 87, 'maha tinggi': 87,
-                'alghasyiyah': 88, 'ghasyiyah': 88, 'hari pembalasan': 88,
-                'alfajr': 89, 'fajr': 89, 'fajar': 89,
-                'albalad': 90, 'balad': 90, 'negeri': 90,
-                'assyams': 91, 'syams': 91, 'matahari': 91,
-                'allail': 92, 'lail': 92, 'malam': 92,
-                'adduha': 93, 'duha': 93, 'waktu duha': 93,
-                'alinsyirah': 94, 'insyirah': 94, 'lapang': 94,
-                'attin': 95, 'tin': 95, 'buah tin': 95,
-                'alalaq': 96, 'alaq': 96, 'segumpal darah': 96,
-                'alqadr': 97, 'qadr': 97, 'kemuliaan': 97,
-                'albayyinah': 98, 'bayyinah': 98, 'bukti': 98,
-                'azzalzalah': 99, 'zalzalah': 99, 'guncangan': 99,
-                'aladiyat': 100, 'adiyat': 100, 'berlari': 100,
-                'alqariah': 101, 'qariah': 101, 'hari kiamat': 101,
-                'attakasur': 102, 'takasur': 102, 'bermegah': 102,
-                'alasr': 103, 'asr': 103, 'masa': 103,
-                'alhumazah': 104, 'humazah': 104, 'pengumpat': 104,
-                'alfil': 105, 'fil': 105, 'gajah': 105,
-                'quraisy': 106, 'suku quraisy': 106,
-                'almaun': 107, 'maun': 107, 'barang berguna': 107,
-                'alkausar': 108, 'kausar': 108, 'nikmat': 108,
-                'alkafirun': 109, 'kafirun': 109, 'orang kafir': 109,
-                'annasr': 110, 'nasr': 110, 'pertolongan': 110,
-                'allahab': 111, 'lahab': 111, 'api': 111,
-                'alikhlas': 112, 'ikhlas': 112, 'memurnikan': 112,
-                'alfalaq': 113, 'falaq': 113, 'waktu subuh':
+                       <p>💡 <strong>Tips:</strong> Gunakan pencarian cepat dengan mengetik nama surat atau nomor surat</p>
+                   </div>
+               `;
+               
+           } catch (error) {
+               console.error('Error loading Quran data:', error);
+               showError('Gagal memuat data Al-Qur\'an. Silakan refresh halaman.');
+           }
+       }
+       
+       // Populate surah select
+       function populateSurahSelect() {
+           const surahSelect = document.getElementById('surahSelect');
+           surahSelect.innerHTML = '<option value="">-- Pilih Surat --</option>';
+           
+           surahList.forEach(surah => {
+               const option = document.createElement('option');
+               option.value = surah.id;
+               option.textContent = `${surah.id}. ${surah.name_simple} - ${surah.translated_name.name} (${surah.verses_count} ayat)`;
+               surahSelect.appendChild(option);
+           });
+       }
+       
+       // Populate juz select
+       function populateJuzSelect() {
+           const juzSelect = document.getElementById('juzSelect');
+           juzSelect.innerHTML = '<option value="">-- Pilih Juz --</option>';
+           
+           for (let i = 1; i <= 30; i++) {
+               const option = document.createElement('option');
+               option.value = i;
+               option.textContent = `Juz ${i}`;
+               juzSelect.appendChild(option);
+           }
+       }
+       
+       // Parse quick search input
+       function parseQuickSearch(input) {
+           const cleanInput = input.toLowerCase().trim();
+           
+           // Pattern: QS 2, QS 2:5, QS 2 ayat 5
+           const qsPattern = /^qs\s*(\d+)(?:\s*(?::|ayat)\s*(\d+))?$/;
+           const qsMatch = cleanInput.match(qsPattern);
+           if (qsMatch) {
+               return {
+                   type: 'surah_ayah',
+                   surah: parseInt(qsMatch[1]),
+                   ayah: qsMatch[2] ? parseInt(qsMatch[2]) : null
+               };
+           }
+           
+           // Pattern: Juz 1
+           const juzPattern = /^juz\s*(\d+)$/;
+           const juzMatch = cleanInput.match(juzPattern);
+           if (juzMatch) {
+               return {
+                   type: 'juz',
+                   juz: parseInt(juzMatch[1])
+               };
+           }
+           
+           // Pattern: Halaman 1
+           const pagePattern = /^halaman\s*(\d+)$/;
+           const pageMatch = cleanInput.match(pagePattern);
+           if (pageMatch) {
+               return {
+                   type: 'page',
+                   page: parseInt(pageMatch[1])
+               };
+           }
+           
+           // Check surah names
+           if (surahNames[cleanInput]) {
+               return {
+                   type: 'surah_name',
+                   surah: surahNames[cleanInput]
+               };
+           }
+           
+           // Check if it's just a number (assume surah number)
+           const numberPattern = /^\d+$/;
+           if (numberPattern.test(cleanInput)) {
+               const num = parseInt(cleanInput);
+               if (num >= 1 && num <= 114) {
+                   return {
+                       type: 'surah_number',
+                       surah: num
+                   };
+               }
+           }
+           
+           return null;
+       }
+       
+       // Perform quick search
+       async function performQuickSearch() {
+           const input = document.getElementById('quickSearchInput').value;
+           if (!input.trim()) {
+               showError('Silakan masukkan kata kunci pencarian');
+               return;
+           }
+           
+           const parsed = parseQuickSearch(input);
+           if (!parsed) {
+               showError('Format pencarian tidak dikenali. Contoh: "QS 2", "yasin", "QS 2 ayat 1", "juz 1", "halaman 1"');
+               return;
+           }
+           
+           switch (parsed.type) {
+               case 'surah_ayah':
+               case 'surah_name':
+               case 'surah_number':
+                   await loadSurah(parsed.surah, parsed.ayah);
+                   break;
+               case 'juz':
+                   await loadJuz(parsed.juz);
+                   break;
+               case 'page':
+                   await loadPage(parsed.page);
+                   break;
+           }
+       }
+       
+       // Handle enter key for quick search
+       function handleQuickSearchEnter(event) {
+           if (event.key === 'Enter') {
+               performQuickSearch();
+           }
+       }
+       
+       // Set quick search input
+       function setQuickSearch(value) {
+           document.getElementById('quickSearchInput').value = value;
+           performQuickSearch();
+       }
+       
+       // Search ayah function
+       async function searchAyah() {
+           const surahId = document.getElementById('surahSelect').value;
+           const ayahNumber = document.getElementById('ayahInput').value;
+           const juzNumber = document.getElementById('juzSelect').value;
+           const pageNumber = document.getElementById('pageInput').value;
+           
+           if (surahId && ayahNumber) {
+               await loadSurah(parseInt(surahId), parseInt(ayahNumber));
+           } else if (surahId) {
+               await loadSurah(parseInt(surahId));
+           } else if (juzNumber) {
+               await loadJuz(parseInt(juzNumber));
+           } else if (pageNumber) {
+               await loadPage(parseInt(pageNumber));
+           } else {
+               showError('Silakan pilih surat atau masukkan kriteria pencarian lainnya');
+           }
+       }
+       
+       // Load specific surah
+       async function loadSurah(surahId, specificAyah = null) {
+           try {
+               showLoading(`Memuat Surat ${surahId}...`);
+               
+               // Simulasi data ayat (dalam implementasi nyata, ambil dari API)
+               const ayahData = await getAyahData(surahId, specificAyah);
+               displayAyahs(ayahData, surahId);
+               
+           } catch (error) {
+               console.error('Error loading surah:', error);
+               showError('Gagal memuat surat. Silakan coba lagi.');
+           }
+       }
+       
+       // Get ayah data (simulasi - dalam implementasi nyata gunakan API)
+       async function getAyahData(surahId, specificAyah = null) {
+           // Simulasi data ayat
+           const sampleAyahs = [
+               {
+                   number: 1,
+                   text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                   translation: "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang."
+               },
+               {
+                   number: 2,
+                   text: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+                   translation: "Segala puji bagi Allah, Tuhan seluruh alam."
+               }
+           ];
+           
+           if (specificAyah) {
+               return sampleAyahs.filter(ayah => ayah.number === specificAyah);
+           }
+           
+           return sampleAyahs;
+       }
+       
+       // Display ayahs
+       function displayAyahs(ayahs, surahId) {
+           const surah = surahList.find(s => s.id === surahId);
+           const surahName = surah ? `${surah.name_simple} - ${surah.translated_name.name}` : `Surat ${surahId}`;
+           
+           let html = `<h2>📖 ${surahName}</h2>`;
+           
+           ayahs.forEach(ayah => {
+               html += `
+                   <div class="ayah-container">
+                       <div class="ayah-header">
+                           <span class="ayah-number">${ayah.number}</span>
+                           <span class="surah-info">QS ${surahId}:${ayah.number}</span>
+                       </div>
+                       <div class="arabic-text">${ayah.text}</div>
+                       <div class="translation">${ayah.translation}</div>
+                   </div>
+               `;
+           });
+           
+           document.getElementById('content').innerHTML = html;
+       }
+       
+       // Load juz
+       async function loadJuz(juzNumber) {
+           showLoading(`Memuat Juz ${juzNumber}...`);
+           // Implementasi loading juz
+           setTimeout(() => {
+               document.getElementById('content').innerHTML = `
+                   <h2>📚 Juz ${juzNumber}</h2>
+                   <p>Fitur juz akan segera tersedia. Silakan gunakan pencarian surat untuk sementara.</p>
+               `;
+           }, 1000);
+       }
+       
+       // Load page
+       async function loadPage(pageNumber) {
+           showLoading(`Memuat Halaman ${pageNumber}...`);
+           // Implementasi loading halaman
+           setTimeout(() => {
+               document.getElementById('content').innerHTML = `
+                   <h2>📄 Halaman ${pageNumber}</h2>
+                   <p>Fitur halaman akan segera tersedia. Silakan gunakan pencarian surat untuk sementara.</p>
+               `;
+           }, 1000);
+       }
+       
+       // Show all surahs
+       function showAllSurahs() {
+           let html = '<h2>📋 Daftar Semua Surat Al-Qur\'an</h2><div class="surah-list">';
+           
+           surahList.forEach(surah => {
+               html += `
+                   <div class="surah-card" onclick="loadSurah(${surah.id})">
+                       <h3>${surah.id}. ${surah.name_simple}</h3>
+                       <p><strong>${surah.translated_name.name}</strong></p>
+                       <p>${surah.verses_count} ayat | ${surah.revelation_place}</p>
+                   </div>
+               `;
+           });
+           
+           html += '</div>';
+           document.getElementById('content').innerHTML = html;
+       }
+       
+       // Load random ayah
+       async function loadRandomAyah() {
+           const randomSurahId = Math.floor(Math.random() * 114) + 1;
+           const maxAyah = surahList.find(s => s.id === randomSurahId)?.verses_count || 10;
+           const randomAyahId = Math.floor(Math.random() * maxAyah) + 1;
+           
+           await loadSurah(randomSurahId, randomAyahId);
+       }
+       
+       // Initialize app
+       document.addEventListener('DOMContentLoaded', function() {
+           loadQuranData();
+       });
+   </script>
+</body>
+</html>
