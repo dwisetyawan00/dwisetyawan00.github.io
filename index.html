@@ -152,6 +152,10 @@
             box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
         }
 
+        .btn:active {
+            transform: translateY(0);
+        }
+
         .content-section {
             background: rgba(255, 255, 255, 0.95);
             padding: 25px;
@@ -270,6 +274,21 @@
             margin: 4px 0;
         }
 
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e3c72;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
             .search-grid {
                 grid-template-columns: 1fr;
@@ -290,11 +309,6 @@
             .arabic-text {
                 font-size: 24px;
             }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -357,6 +371,7 @@
         <div class="content-section">
             <div id="content">
                 <div class="loading">
+                    <div class="spinner"></div>
                     <p>Selamat datang di Al-Qur'an Digital</p>
                     <p>Memuat data Al-Qur'an...</p>
                 </div>
@@ -578,14 +593,14 @@
             'alasr': 103, 'asr': 103, 'masa': 103, 'al asr': 103,
             // Al-Humazah
             'alhumazah': 104, 'humazah': 104, 'pengumpat': 104, 'al humazah': 104,
-            // Al-Fil
+           // Al-Fil
             'alfil': 105, 'fil': 105, 'gajah': 105, 'al fil': 105,
-            // Quraysh
-            'quraisy': 106, 'suku quraisy': 106, 'quraysh': 106,
+            // Quraisy
+            'quraisy': 106, 'qurasy': 106, 'suku quraisy': 106,
             // Al-Ma'un
             'almaun': 107, 'maun': 107, 'barang berguna': 107, 'al maun': 107,
             // Al-Kawthar
-            'alkausar': 108, 'kausar': 108, 'nikmat berlimpah': 108, 'al kawthar': 108,
+            'alkausar': 108, 'kausar': 108, 'nikmat': 108, 'al kawthar': 108,
             // Al-Kafirun
             'alkafirun': 109, 'kafirun': 109, 'orang kafir': 109, 'al kafirun': 109,
             // An-Nasr
@@ -593,89 +608,425 @@
             // Al-Masad
             'almasad': 111, 'masad': 111, 'sabut': 111, 'al masad': 111, 'lahab': 111,
             // Al-Ikhlas
-            'alikhlas': 112, 'ikhlas': 112, 'memurnikan keesaan': 112, 'al ikhlas': 112,
+            'alikhlas': 112, 'ikhlas': 112, 'kemurnian': 112, 'al ikhlas': 112,
             // Al-Falaq
             'alfalaq': 113, 'falaq': 113, 'waktu subuh': 113, 'al falaq': 113,
             // An-Nas
             'annas': 114, 'nas': 114, 'manusia': 114, 'an nas': 114
         };
 
-        // Load initial data
-        async function loadQuranData() {
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        async function initializeApp() {
             try {
-                // Load basic surah info
-                const surahResponse = await fetch('https://api.quran.com/api/v4/chapters');
-                const surahData = await surahResponse.json();
-                surahList = surahData.chapters;
-                
-                populateSurahDropdown();
-                populateJuzDropdown();
-                
-                document.getElementById('content').innerHTML = `
-                    <div style="text-align: center; padding: 40px;">
-                        <h2 style="color: #1e3c72; margin-bottom: 20px;">✨ Selamat Datang di Al-Qur'an Digital ✨</h2>
-                        <p style="font-size: 16px; color: #666; line-height: 1.6;">
-                            Aplikasi Al-Qur'an digital dengan fitur pencarian yang mudah dan lengkap.<br>
-                            Gunakan pencarian cepat atau pilih surat dan ayat secara manual.
-                        </p>
-                        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-                            <h3 style="color: #1e3c72; margin-bottom: 15px;">🚀 Cara Penggunaan:</h3>
-                            <ul style="text-align: left; max-width: 600px; margin: 0 auto;">
-                                <li><strong>Pencarian Cepat:</strong> Ketik "QS 2", "al baqarah", "yasin", dll.</li>
-                                <li><strong>Pencarian Manual:</strong> Pilih surat dan nomor ayat</li>
-                                <li><strong>Daftar Surat:</strong> Lihat semua 114 surat dalam Al-Qur'an</li>
-                                <li><strong>Ayat Acak:</strong> Dapatkan ayat random untuk refleksi</li>
-                            </ul>
-                        </div>
-                    </div>
-                `;
+                showLoading('Memuat data Al-Qur\'an...');
+                await loadQuranData();
+                await loadSurahList();
+                populateSelects();
+                showWelcomeMessage();
             } catch (error) {
-                console.error('Error loading Quran data:', error);
-                document.getElementById('content').innerHTML = `
-                    <div class="error">
-                        <h3>❌ Gagal memuat data Al-Qur'an</h3>
-                        <p>Mohon periksa koneksi internet Anda dan refresh halaman.</p>
-                        <button class="btn" onclick="loadQuranData()">🔄 Coba Lagi</button>
-                    </div>
-                `;
+                showError('Gagal memuat data Al-Qur\'an: ' + error.message);
             }
         }
 
-        // Populate surah dropdown
-        function populateSurahDropdown() {
-            const select = document.getElementById('surahSelect');
-            select.innerHTML = '<option value="">-- Pilih Surat --</option>';
-            
+        async function loadQuranData() {
+            try {
+                const response = await fetch('https://api.quran.com/api/v4/quran/translations/33');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                quranData = data.translations[0];
+            } catch (error) {
+                console.error('Error loading Quran data:', error);
+                throw error;
+            }
+        }
+
+        async function loadSurahList() {
+            try {
+                const response = await fetch('https://api.quran.com/api/v4/chapters');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                surahList = data.chapters;
+            } catch (error) {
+                console.error('Error loading Surah list:', error);
+                throw error;
+            }
+        }
+
+        function populateSelects() {
+            const surahSelect = document.getElementById('surahSelect');
+            const juzSelect = document.getElementById('juzSelect');
+
+            // Populate Surah select
             surahList.forEach(surah => {
                 const option = document.createElement('option');
                 option.value = surah.id;
                 option.textContent = `${surah.id}. ${surah.name_simple} (${surah.translated_name.name})`;
-                select.appendChild(option);
+                surahSelect.appendChild(option);
             });
-        }
 
-        // Populate juz dropdown
-        function populateJuzDropdown() {
-            const select = document.getElementById('juzSelect');
-            select.innerHTML = '<option value="">-- Pilih Juz --</option>';
-            
+            // Populate Juz select
             for (let i = 1; i <= 30; i++) {
                 const option = document.createElement('option');
                 option.value = i;
                 option.textContent = `Juz ${i}`;
-                select.appendChild(option);
+                juzSelect.appendChild(option);
             }
         }
 
-        // Quick search functionality
+        function showLoading(message = 'Loading...') {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="error">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+        }
+
+        function showWelcomeMessage() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div style="text-align: center; padding: 50px;">
+                    <h2 style="color: #1e3c72; margin-bottom: 20px;">🕌 Selamat Datang di Al-Qur'an Digital</h2>
+                    <p style="font-size: 18px; color: #666; margin-bottom: 20px;">
+                        Platform digital untuk membaca Al-Qur'an dengan terjemahan Bahasa Indonesia
+                    </p>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h3 style="color: #1e3c72; margin-bottom: 15px;">Fitur Unggulan:</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 10px 0;">🔍 Pencarian cepat dengan berbagai format</li>
+                            <li style="margin: 10px 0;">📖 Teks Arab asli dengan terjemahan</li>
+                            <li style="margin: 10px 0;">📋 Daftar lengkap 114 surat</li>
+                            <li style="margin: 10px 0;">🎲 Ayat acak untuk renungan</li>
+                            <li style="margin: 10px 0;">📱 Responsif untuk semua perangkat</li>
+                        </ul>
+                    </div>
+                    <p style="color: #666;">
+                        Gunakan pencarian cepat atau pilih surat secara manual untuk memulai
+                    </p>
+                </div>
+            `;
+        }
+
+        // Pencarian cepat
         function performQuickSearch() {
-            const input = document.getElementById('quickSearchInput').value.trim().toLowerCase();
-            if (!input) {
-                alert('Mohon masukkan kata kunci pencarian');
+            const query = document.getElementById('quickSearchInput').value.trim().toLowerCase();
+            if (!query) {
+                showError('Masukkan pencarian terlebih dahulu');
                 return;
             }
 
-            parseQuickSearch(input);
+            parseQuickSearch(query);
+        }
+
+        function parseQuickSearch(query) {
+            // Hapus kata "qs", "surat", "surah" dari query
+            let cleanQuery = query.replace(/^(qs|surat|surah)\s+/i, '').trim();
+            
+            // Pattern untuk QS X:Y atau QS X ayat Y
+            const qsPattern = /^(\d+)(?::(\d+)|(?:\s+ayat\s+(\d+)))?$/i;
+            const qsMatch = cleanQuery.match(qsPattern);
+            
+            if (qsMatch) {
+                const surahNum = parseInt(qsMatch[1]);
+                const ayahNum = parseInt(qsMatch[2] || qsMatch[3] || 1);
+                searchSpecificAyah(surahNum, ayahNum);
+                return;
+            }
+
+            // Pattern untuk nama surat + ayat
+            const nameAyahPattern = /^(.+?)\s+ayat\s+(\d+)$/i;
+            const nameAyahMatch = cleanQuery.match(nameAyahPattern);
+            
+            if (nameAyahMatch) {
+                const surahName = nameAyahMatch[1].trim();
+                const ayahNum = parseInt(nameAyahMatch[2]);
+                const surahNum = surahNames[surahName];
+                
+                if (surahNum) {
+                    searchSpecificAyah(surahNum, ayahNum);
+                    return;
+                }
+            }
+
+            // Cari berdasarkan nama surat
+            const surahNum = surahNames[cleanQuery];
+            if (surahNum) {
+                loadSurah(surahNum);
+                return;
+            }
+
+            // Coba cari dengan angka saja
+            const numOnly = parseInt(cleanQuery);
+            if (numOnly && numOnly >= 1 && numOnly <= 114) {
+                loadSurah(numOnly);
+                return;
+            }
+
+            showError(`Pencarian "${query}" tidak ditemukan. Coba format: "QS 2", "al baqarah", "QS 2:5", atau "yasin ayat 1"`);
+        }
+
+        async function searchSpecificAyah(surahNum, ayahNum) {
+            if (surahNum < 1 || surahNum > 114) {
+                showError('Nomor surat harus antara 1-114');
+                return;
+            }
+
+            showLoading(`Mencari QS ${surahNum}:${ayahNum}...`);
+
+            try {
+                const response = await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${surahNum}?language=id&words=false&translations=33&per_page=300`);
+                if (!response.ok) throw new Error('Gagal mengambil data ayat');
+                
+                const data = await response.json();
+                const ayah = data.verses.find(v => v.verse_number === ayahNum);
+                
+                if (!ayah) {
+                    showError(`Ayat ${ayahNum} tidak ditemukan dalam surat ${surahNum}`);
+                    return;
+                }
+
+                const surah = surahList.find(s => s.id === surahNum);
+                displaySingleAyah(ayah, surah);
+                
+            } catch (error) {
+                showError('Gagal memuat ayat: ' + error.message);
+            }
+        }
+
+        function displaySingleAyah(ayah, surah) {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <button class="btn" onclick="showWelcomeMessage()">← Kembali ke Beranda</button>
+                    <button class="btn" onclick="loadSurah(${surah.id})">📖 Baca Surat Lengkap</button>
+                </div>
+                <div class="ayah-container">
+                    <div class="ayah-header">
+                        <span class="ayah-number">${ayah.verse_key}</span>
+                        <span class="surah-info">${surah.name_simple} - ${surah.translated_name.name}</span>
+                    </div>
+                    <div class="arabic-text">${ayah.text_uthmani}</div>
+                    <div class="translation">${ayah.translations[0].text}</div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn" onclick="loadRandomAyah()">🎲 Ayat Acak Lainnya</button>
+                </div>
+            `;
+        }
+
+        async function loadSurah(surahId) {
+            if (!surahId) {
+                showError('Pilih surat terlebih dahulu');
+                return;
+            }
+
+            showLoading(`Memuat surat ${surahId}...`);
+
+            try {
+                const response = await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${surahId}?language=id&words=false&translations=33&per_page=300`);
+                if (!response.ok) throw new Error('Gagal mengambil data surat');
+                
+                const data = await response.json();
+                const surah = surahList.find(s => s.id === parseInt(surahId));
+                
+                displaySurah(data.verses, surah);
+                
+            } catch (error) {
+                showError('Gagal memuat surat: ' + error.message);
+            }
+        }
+
+        function displaySurah(verses, surah) {
+            const content = document.getElementById('content');
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <button class="btn" onclick="showWelcomeMessage()">← Kembali ke Beranda</button>
+                    <button class="btn" onclick="showAllSurahs()">📋 Daftar Surat</button>
+                </div>
+                <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <h2 style="color: #1e3c72; margin-bottom: 10px;">${surah.name_simple}</h2>
+                    <p style="color: #666; font-size: 16px;">${surah.translated_name.name}</p>
+                    <p style="color: #666; font-size: 14px;">${surah.revelation_place} • ${surah.verses_count} Ayat</p>
+                </div>
+            `;
+
+            verses.forEach(verse => {
+                html += `
+                    <div class="ayah-container">
+                        <div class="ayah-header">
+                            <span class="ayah-number">${verse.verse_key}</span>
+                        </div>
+                        <div class="arabic-text">${verse.text_uthmani}</div>
+                        <div class="translation">${verse.translations[0].text}</div>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+        }
+
+        async function searchAyah() {
+            const surahId = document.getElementById('surahSelect').value;
+            const ayahNumber = document.getElementById('ayahInput').value;
+            const juzNumber = document.getElementById('juzSelect').value;
+            const pageNumber = document.getElementById('pageInput').value;
+
+            if (surahId && ayahNumber) {
+                await searchSpecificAyah(parseInt(surahId), parseInt(ayahNumber));
+            } else if (surahId) {
+                await loadSurah(surahId);
+            } else if (juzNumber) {
+                await loadJuz(juzNumber);
+            } else if (pageNumber) {
+                await loadPage(pageNumber);
+            } else {
+                showError('Pilih surat atau masukkan kriteria pencarian');
+            }
+        }
+
+        async function loadJuz(juzNumber) {
+            showLoading(`Memuat Juz ${juzNumber}...`);
+            
+            try {
+                const response = await fetch(`https://api.quran.com/api/v4/verses/by_juz/${juzNumber}?language=id&words=false&translations=33&per_page=300`);
+                if (!response.ok) throw new Error('Gagal mengambil data juz');
+                
+                const data = await response.json();
+                displayJuz(data.verses, juzNumber);
+                
+            } catch (error) {
+                showError('Gagal memuat juz: ' + error.message);
+            }
+        }
+
+        function displayJuz(verses, juzNumber) {
+            const content = document.getElementById('content');
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <button class="btn" onclick="showWelcomeMessage()">← Kembali ke Beranda</button>
+                </div>
+                <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <h2 style="color: #1e3c72;">Juz ${juzNumber}</h2>
+                    <p style="color: #666;">Para atau Bagian ${juzNumber} dari Al-Qur'an</p>
+                </div>
+            `;
+
+            verses.forEach(verse => {
+                html += `
+                    <div class="ayah-container">
+                        <div class="ayah-header">
+                            <span class="ayah-number">${verse.verse_key}</span>
+                        </div>
+                        <div class="arabic-text">${verse.text_uthmani}</div>
+                        <div class="translation">${verse.translations[0].text}</div>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+        }
+
+        async function loadPage(pageNumber) {
+            showLoading(`Memuat halaman ${pageNumber}...`);
+            
+            try {
+                const response = await fetch(`https://api.quran.com/api/v4/verses/by_page/${pageNumber}?language=id&words=false&translations=33&per_page=300`);
+                if (!response.ok) throw new Error('Gagal mengambil data halaman');
+                
+                const data = await response.json();
+                displayPage(data.verses, pageNumber);
+                
+            } catch (error) {
+                showError('Gagal memuat halaman: ' + error.message);
+            }
+        }
+
+        function displayPage(verses, pageNumber) {
+            const content = document.getElementById('content');
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <button class="btn" onclick="showWelcomeMessage()">← Kembali ke Beranda</button>
+                </div>
+                <div style="text-align: center; margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <h2 style="color: #1e3c72;">Halaman ${pageNumber}</h2>
+                    <p style="color: #666;">Mushaf Al-Qur'an halaman ${pageNumber} dari 604</p>
+                </div>
+            `;
+
+            verses.forEach(verse => {
+                html += `
+                    <div class="ayah-container">
+                        <div class="ayah-header">
+                            <span class="ayah-number">${verse.verse_key}</span>
+                        </div>
+                        <div class="arabic-text">${verse.text_uthmani}</div>
+                        <div class="translation">${verse.translations[0].text}</div>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+        }
+
+        function showAllSurahs() {
+            const content = document.getElementById('content');
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <button class="btn" onclick="showWelcomeMessage()">← Kembali ke Beranda</button>
+                </div>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h2 style="color: #1e3c72;">📋 Daftar 114 Surat Al-Qur'an</h2>
+                    <p style="color: #666;">Klik pada surat untuk membaca</p>
+                </div>
+                <div class="surah-list">
+            `;
+
+            surahList.forEach(surah => {
+                html += `
+                    <div class="surah-card" onclick="loadSurah(${surah.id})">
+                        <h3>${surah.id}. ${surah.name_simple}</h3>
+                        <p><strong>${surah.translated_name.name}</strong></p>
+                        <p>${surah.revelation_place} • ${surah.verses_count} Ayat</p>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            content.innerHTML = html;
+        }
+
+        async function loadRandomAyah() {
+            showLoading('Mencari ayat acak...');
+            
+            try {
+                const randomSurah = Math.floor(Math.random() * 114) + 1;
+                const surah = surahList.find(s => s.id === randomSurah);
+                const randomAyah = Math.floor(Math.random() * surah.verses_count) + 1;
+                
+                await searchSpecificAyah(randomSurah, randomAyah);
+                
+            } catch (error) {
+                showError('Gagal memuat ayat acak: ' + error.message);
+            }
+        }
+
+        // Event handlers
+        function setQuickSearch(text) {
+            document.getElementById('quickSearchInput').value = text;
         }
 
         function handleQuickSearchEnter(event) {
@@ -684,379 +1035,16 @@
             }
         }
 
-        function setQuickSearch(text) {
-            document.getElementById('quickSearchInput').value = text;
-            performQuickSearch();
-        }
-
-        // Parse quick search input
-        function parseQuickSearch(input) {
-            // Remove extra spaces and normalize
-            input = input.replace(/\s+/g, ' ').trim();
-            
-            // Pattern: QS 2:5 or QS al baqarah ayat 5
-            const qsPattern = /^qs\s+(.+?)(?:\s+ayat\s+(\d+))?(?::(\d+))?$/i;
-            const qsMatch = input.match(qsPattern);
-            
-            if (qsMatch) {
-                const surahPart = qsMatch[1].trim().toLowerCase();
-                const ayahFromAyat = qsMatch[2];
-                const ayahFromColon = qsMatch[3];
-                const ayahNumber = ayahFromAyat || ayahFromColon;
-                
-                // Check if surahPart is a number
-                if (/^\d+$/.test(surahPart)) {
-                    const surahNumber = parseInt(surahPart);
-                    if (surahNumber >= 1 && surahNumber <= 114) {
-                        if (ayahNumber) {
-                            loadSpecificAyah(surahNumber, parseInt(ayahNumber));
-                        } else {
-                            loadSurah(surahNumber);
-                        }
-                        return;
-                    }
-                } else {
-                    // Check surah names
-                    const surahNumber = surahNames[surahPart];
-                    if (surahNumber) {
-                        if (ayahNumber) {
-                            loadSpecificAyah(surahNumber, parseInt(ayahNumber));
-                        } else {
-                            loadSurah(surahNumber);
-                        }
-                        return;
-                    }
+        // Surah select change handler
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('surahSelect').addEventListener('change', function() {
+                const ayahInput = document.getElementById('ayahInput');
+                const selectedSurah = surahList.find(s => s.id === parseInt(this.value));
+                if (selectedSurah) {
+                    ayahInput.max = selectedSurah.verses_count;
+                    ayahInput.placeholder = `1-${selectedSurah.verses_count}`;
                 }
-            }
-            
-            // Pattern: just surah name or number
-            if (/^\d+$/.test(input)) {
-                const surahNumber = parseInt(input);
-                if (surahNumber >= 1 && surahNumber <= 114) {
-                    loadSurah(surahNumber);
-                    return;
-                }
-            }
-            
-            // Check surah names directly
-            const surahNumber = surahNames[input];
-            if (surahNumber) {
-                loadSurah(surahNumber);
-                return;
-            }
-            
-            // If nothing matches
-            document.getElementById('content').innerHTML = `
-                <div class="error">
-                    <h3>❌ Pencarian tidak ditemukan</h3>
-                    <p>Kata kunci "<strong>${input}</strong>" tidak ditemukan.</p>
-                    <p><strong>Contoh pencarian yang benar:</strong></p>
-                    <ul>
-                        <li>QS 2 (untuk surat Al-Baqarah)</li>
-                        <li>al baqarah (nama surat)</li>
-                        <li>QS al baqarah ayat 1</li>
-                        <li>yasin (nama surat)</li>
-                        <li>2 (nomor surat)</li>
-                    </ul>
-                </div>
-            `;
-        }
-
-        // Load specific ayah
-        async function loadSpecificAyah(surahNumber, ayahNumber) {
-            try {
-                document.getElementById('content').innerHTML = '<div class="loading">Memuat ayat...</div>';
-                
-                const response = await fetch(`https://api.quran.com/api/v4/verses/by_key/${surahNumber}:${ayahNumber}?translations=33`);
-                const data = await response.json();
-                
-                if (data.verse) {
-                    displayAyah(data.verse, surahNumber);
-                } else {
-                    throw new Error('Ayat tidak ditemukan');
-                }
-            } catch (error) {
-                console.error('Error loading ayah:', error);
-                document.getElementById('content').innerHTML = `
-                    <div class="error">
-                        <h3>❌ Ayat tidak ditemukan</h3>
-                        <p>Ayat ${ayahNumber} pada surat ${surahNumber} tidak ditemukan atau terjadi kesalahan.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Load full surah
-        async function loadSurah(surahNumber) {
-            try {
-                document.getElementById('content').innerHTML = '<div class="loading">Memuat surat...</div>';
-                
-                const response = await fetch(`https://api.quran.com/api/v4/chapters/${surahNumber}/verses?translations=33`);
-                const data = await response.json();
-                
-                if (data.verses && data.verses.length > 0) {
-                    displaySurah(data.verses, surahNumber);
-                } else {
-                    throw new Error('Surat tidak ditemukan');
-                }
-            } catch (error) {
-                console.error('Error loading surah:', error);
-                document.getElementById('content').innerHTML = `
-                    <div class="error">
-                        <h3>❌ Surat tidak ditemukan</h3>
-                        <p>Surat nomor ${surahNumber} tidak ditemukan atau terjadi kesalahan.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Display single ayah
-        function displayAyah(verse, surahNumber) {
-            const surah = surahList.find(s => s.id === surahNumber);
-            const surahName = surah ? surah.name_simple : `Surat ${surahNumber}`;
-            const translatedName = surah ? surah.translated_name.name : '';
-            
-            const html = `
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h2 style="color: #1e3c72;">📖 ${surahName} ${translatedName ? `(${translatedName})` : ''}</h2>
-                    <p style="color: #666;">Ayat ${verse.verse_number}</p>
-                </div>
-                <div class="ayah-container">
-                    <div class="ayah-header">
-                        <span class="ayah-number">${verse.verse_number}</span>
-                        <span class="surah-info">${surahName} : ${verse.verse_number}</span>
-                    </div>
-                    <div class="arabic-text">${verse.text_uthmani}</div>
-                    <div class="translation">
-                        ${verse.translations && verse.translations[0] ? verse.translations[0].text : 'Terjemahan tidak tersedia'}
-                    </div>
-                </div>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn" onclick="loadSurah(${surahNumber})">📋 Lihat Seluruh Surat</button>
-                    <button class="btn" onclick="loadRandomAyah()">🎲 Ayat Acak Lainnya</button>
-                </div>
-            `;
-            
-            document.getElementById('content').innerHTML = html;
-        }
-
-        // Display full surah
-        function displaySurah(verses, surahNumber) {
-            const surah = surahList.find(s => s.id === surahNumber);
-            const surahName = surah ? surah.name_simple : `Surat ${surahNumber}`;
-            const translatedName = surah ? surah.translated_name.name : '';
-            
-            let html = `
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h2 style="color: #1e3c72;">📖 ${surahName} ${translatedName ? `(${translatedName})` : ''}</h2>
-                    <p style="color: #666;">${verses.length} Ayat</p>
-                </div>
-            `;
-            
-            verses.forEach(verse => {
-                html += `
-                    <div class="ayah-container">
-                        <div class="ayah-header">
-                            <span class="ayah-number">${verse.verse_number}</span>
-                            <span class="surah-info">${surahName} : ${verse.verse_number}</span>
-                        </div>
-                        <div class="arabic-text">${verse.text_uthmani}</div>
-                        <div class="translation">
-                            ${verse.translations && verse.translations[0] ? verse.translations[0].text : 'Terjemahan tidak tersedia'}
-                        </div>
-                    </div>
-                `;
             });
-            
-            html += `
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn" onclick="showAllSurahs()">📋 Daftar Semua Surat</button>
-                    <button class="btn" onclick="loadRandomAyah()">🎲 Ayat Acak</button>
-                </div>
-            `;
-            
-            document.getElementById('content').innerHTML = html;
-        }
-
-        // Search ayah function
-        async function searchAyah() {
-            const surahId = document.getElementById('surahSelect').value;
-            const ayahNumber = document.getElementById('ayahInput').value;
-            const juzNumber = document.getElementById('juzSelect').value;
-            const pageNumber = document.getElementById('pageInput').value;
-            
-            if (surahId && ayahNumber) {
-                loadSpecificAyah(parseInt(surahId), parseInt(ayahNumber));
-            } else if (surahId) {
-                loadSurah(parseInt(surahId));
-            } else if (juzNumber) {
-                loadJuz(parseInt(juzNumber));
-            } else if (pageNumber) {
-                loadPage(parseInt(pageNumber));
-            } else {
-                alert('Mohon pilih surat atau masukkan kriteria pencarian');
-            }
-        }
-
-        // Load juz
-        async function loadJuz(juzNumber) {
-            try {
-                document.getElementById('content').innerHTML = '<div class="loading">Memuat juz...</div>';
-                
-                const response = await fetch(`https://api.quran.com/api/v4/juzs/${juzNumber}?translations=33`);
-                const data = await response.json();
-                
-                if (data.verses && data.verses.length > 0) {
-                    displayJuz(data.verses, juzNumber);
-                } else {
-                    throw new Error('Juz tidak ditemukan');
-                }
-            } catch (error) {
-                console.error('Error loading juz:', error);
-                document.getElementById('content').innerHTML = `
-                    <div class="error">
-                        <h3>❌ Juz tidak ditemukan</h3>
-                        <p>Juz ${juzNumber} tidak ditemukan atau terjadi kesalahan.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Display juz
-        function displayJuz(verses, juzNumber) {
-            let html = `
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h2 style="color: #1e3c72;">📚 Juz ${juzNumber}</h2>
-                    <p style="color: #666;">${verses.length} Ayat</p>
-                </div>
-            `;
-            
-            verses.forEach(verse => {
-                const surah = surahList.find(s => s.id === verse.chapter_id);
-                const surahName = surah ? surah.name_simple : `Surat ${verse.chapter_id}`;
-                
-                html += `
-                    <div class="ayah-container">
-                        <div class="ayah-header">
-                            <span class="ayah-number">${verse.verse_number}</span>
-                            <span class="surah-info">${surahName} : ${verse.verse_number}</span>
-                        </div>
-                        <div class="arabic-text">${verse.text_uthmani}</div>
-                        <div class="translation">
-                            ${verse.translations && verse.translations[0] ? verse.translations[0].text : 'Terjemahan tidak tersedia'}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('content').innerHTML = html;
-        }
-
-        // Load page
-        async function loadPage(pageNumber) {
-            try {
-                document.getElementById('content').innerHTML = '<div class="loading">Memuat halaman...</div>';
-                
-                const response = await fetch(`https://api.quran.com/api/v4/verses/by_page/${pageNumber}?translations=33`);
-                const data = await response.json();
-                
-                if (data.verses && data.verses.length > 0) {
-                    displayPage(data.verses, pageNumber);
-                } else {
-                    throw new Error('Halaman tidak ditemukan');
-                }
-            } catch (error) {
-                console.error('Error loading page:', error);
-                document.getElementById('content').innerHTML = `
-                    <div class="error">
-                        <h3>❌ Halaman tidak ditemukan</h3>
-                        <p>Halaman ${pageNumber} tidak ditemukan atau terjadi kesalahan.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Display page
-        function displayPage(verses, pageNumber) {
-            let html = `
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h2 style="color: #1e3c72;">📄 Halaman ${pageNumber}</h2>
-                    <p style="color: #666;">${verses.length} Ayat</p>
-                </div>
-            `;
-            
-            verses.forEach(verse => {
-                const surah = surahList.find(s => s.id === verse.chapter_id);
-                const surahName = surah ? surah.name_simple : `Surat ${verse.chapter_id}`;
-                
-                html += `
-                    <div class="ayah-container">
-                        <div class="ayah-header">
-                            <span class="ayah-number">${verse.verse_number}</span>
-                            <span class="surah-info">${surahName} : ${verse.verse_number}</span>
-                        </div>
-                        <div class="arabic-text">${verse.text_uthmani}</div>
-                        <div class="translation">
-                            ${verse.translations && verse.translations[0] ? verse.translations[0].text : 'Terjemahan tidak tersedia'}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('content').innerHTML = html;
-        }
-
-        // Show all surahs
-        function showAllSurahs() {
-            let html = `
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h2 style="color: #1e3c72;">📚 Daftar 114 Surat Al-Qur'an</h2>
-                    <p style="color: #666;">Klik pada surat untuk membacanya</p>
-                </div>
-                <div class="surah-list">
-            `;
-            
-            surahList.forEach(surah => {
-                html += `
-                    <div class="surah-card" onclick="loadSurah(${surah.id})">
-                        <h3>${surah.id}. ${surah.name_simple}</h3>
-                        <p><strong>${surah.translated_name.name}</strong></p>
-                        <p>${surah.verses_count} ayat • ${surah.revelation_place === 'makkah' ? 'Makkiyah' : 'Madaniyah'}</p>
-                    </div>
-                `;
-            });
-            
-            html += '</div>';
-            document.getElementById('content').innerHTML = html;
-        }
-
-        // Load random ayah
-        async function loadRandomAyah() {
-            try {
-                document.getElementById('content').innerHTML = '<div class="loading">Memuat ayat acak...</div>';
-                
-                // Get random surah and ayah
-                const randomSurah = Math.floor(Math.random() * 114) + 1;
-                const surahInfo = surahList.find(s => s.id === randomSurah);
-                const maxAyah = surahInfo ? surahInfo.verses_count : 286;
-                const randomAyah = Math.floor(Math.random() * maxAyah) + 1;
-                
-                loadSpecificAyah(randomSurah, randomAyah);
-            } catch (error) {
-                console.error('Error loading random ayah:', error);
-                document.getElementById('content').innerHTML = `
-                    <div class="error">
-                        <h3>❌ Gagal memuat ayat acak</h3>
-                        <p>Terjadi kesalahan saat memuat ayat acak.</p>
-                        <button class="btn" onclick="loadRandomAyah()">🔄 Coba Lagi</button>
-                    </div>
-                `;
-            }
-        }
-
-        // Initialize app
-        window.addEventListener('DOMContentLoaded', function() {
-            loadQuranData();
         });
     </script>
 </body>
