@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalkulator After Fee - Shopee & Tokopedia</title>
+  <title>Kalkulator After Fee - Shopee & Tokopedia 2025</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -562,6 +562,54 @@
       color: white;
     }
 
+    .fee-breakdown {
+      background: var(--surface-light);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .fee-breakdown h4 {
+      color: var(--shopee-primary);
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .fee-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .fee-item span:first-child {
+      color: var(--text-secondary);
+    }
+
+    .fee-item span:last-child {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .fee-total {
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      margin-top: 8px;
+      font-weight: 700;
+    }
+
+    .info-badge {
+      display: inline-block;
+      background: rgba(102, 126, 234, 0.2);
+      color: var(--text-primary);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-left: 10px;
+    }
+
     @media (max-width: 1200px) {
       .platform-configs {
         grid-template-columns: 1fr;
@@ -800,8 +848,8 @@
 
   <div class="container">
     <div class="header">
-      <h1>Kalkulator After Fee</h1>
-      <p>Shopee & Tokopedia Price Optimizer</p>
+      <h1>Kalkulator After Fee 2025</h1>
+      <p>Shopee & Tokopedia Price Optimizer (Updated July 2025)</p>
     </div>
 
     <div class="main-content">
@@ -848,32 +896,43 @@
         <div class="shopee-section">
           <div class="section-title">
             <i class="fas fa-store"></i>
-            Konfigurasi Shopee
+            Konfigurasi Shopee 2025
           </div>
           
           <div class="input-group">
-            <label>Kategori Produk & Program Seller</label>
-            <select id="jenisShopee">
-              <option value="0.12">Fashion non-participating sellers (12%)</option>
-              <option value="0.10">Elektronik, gadget tanpa program (10%)</option>
-              <option value="0.08">Fashion dengan beta refund program (8%)</option>
-              <option value="0.075">Kosmetik, skincare standar (7.5%)</option>
-              <option value="0.06">Produk rumah tangga dengan program (6%)</option>
-              <option value="0.025">Produk digital, pulsa, voucher (2.5%)</option>
+            <label>Tipe Penjual</label>
+            <select id="sellerType">
+              <option value="new">Non-Star Baru (0-50 pesanan pertama)</option>
+              <option value="nonstar" selected>Non-Star (≥50 pesanan)</option>
+              <option value="star">Star Seller</option>
+              <option value="starplus">Star+ Seller</option>
+              <option value="mall">Shopee Mall</option>
             </select>
           </div>
 
           <div class="input-group">
-            <label>Sales & Service Tax (SST)</label>
-            <select id="sstShopee">
-              <option value="0.08" selected>SST 8% - Wajib untuk seller lokal</option>
-              <option value="0">Tanpa SST (seller internasional)</option>
+            <label>Kategori Produk</label>
+            <select id="productCategory">
+              <option value="A">Kategori A - 8% (Fashion, Kesehatan & Kecantikan, dll)</option>
+              <option value="B" selected>Kategori B - 7.5% (Elektronik, Gadget, Otomotif, dll)</option>
+              <option value="C">Kategori C - 5.75% (Ibu & Bayi, Rumah Tangga, dll)</option>
+              <option value="D">Kategori D - 4.25% (Makanan & Minuman, Buku, dll)</option>
+              <option value="E">Kategori E - 2.5% (Pulsa, Token, Voucher Digital)</option>
             </select>
           </div>
 
-          <div class="checkbox-container">
-            <input type="checkbox" id="promoShopee" checked>
-            <label for="promoShopee">Gratis Ongkir XTRA & Marketing Programs (~5.4%)</label>
+          <div class="input-group">
+            <label>Program XTRA Marketing</label>
+            <select id="xtraProgram">
+              <option value="none">Tidak Ikut Program XTRA</option>
+              <option value="ongkir">XTRA Gratis Ongkir Saja (~4%)</option>
+              <option value="promo">XTRA Promo/Cashback Saja (~2%)</option>
+              <option value="both" selected>XTRA Gratis Ongkir + Promo (~6%)</option>
+            </select>
+          </div>
+
+          <div class="info-badge" style="margin-top: 15px; display: block; text-align: center;">
+            <i class="fas fa-info-circle"></i> Update Juli 2025: Order Fee Rp1.250 per pesanan
           </div>
         </div>
 
@@ -889,7 +948,7 @@
             <select id="platTok">
               <option value="1">Produk digital, pulsa, e-voucher (1%)</option>
               <option value="2">Makanan & minuman, Power Merchant (2%)</option>
-              <option value="4">Rumah tangga, mainan, toko reguler (4%)</option>
+              <option value="4" selected>Rumah tangga, mainan, toko reguler (4%)</option>
               <option value="6">Fashion, kosmetik, Power Merchant Pro (6%)</option>
               <option value="8">Elektronik, gadget, kategori premium (8%)</option>
             </select>
@@ -946,6 +1005,68 @@
       }
     }
 
+    function getShopeeAdminFee() {
+      const category = document.getElementById('productCategory').value;
+      const sellerType = document.getElementById('sellerType').value;
+      
+      // Fee berdasarkan kategori
+      const categoryFees = {
+        'A': 0.08,   // 8%
+        'B': 0.075,  // 7.5%
+        'C': 0.0575, // 5.75%
+        'D': 0.0425, // 4.25%
+        'E': 0.025   // 2.5%
+      };
+      
+      // Seller baru Non-Star tidak kena admin fee untuk 50 pesanan pertama
+      if (sellerType === 'new') {
+        return 0;
+      }
+      
+      return categoryFees[category] || 0.075;
+    }
+
+    function getXtraFee() {
+      const xtraProgram = document.getElementById('xtraProgram').value;
+      const sellerType = document.getElementById('sellerType').value;
+      
+      // Seller baru Non-Star bebas XTRA fee untuk 200 pesanan pertama
+      if (sellerType === 'new') {
+        return 0;
+      }
+      
+      const xtraFees = {
+        'none': 0,
+        'ongkir': 0.04,  // 4%
+        'promo': 0.02,   // 2%
+        'both': 0.06     // 6% (kombinasi)
+      };
+      
+      return xtraFees[xtraProgram] || 0;
+    }
+
+    function getOrderFee() {
+      const sellerType = document.getElementById('sellerType').value;
+      
+      // Seller baru Non-Star bebas order fee untuk 50 pesanan pertama
+      if (sellerType === 'new') {
+        return 0;
+      }
+      
+      return 1250; // Rp 1.250 per pesanan
+    }
+
+    function getPaymentFee() {
+      const sellerType = document.getElementById('sellerType').value;
+      
+      // Shopee Mall punya payment fee 1.8%
+      if (sellerType === 'mall') {
+        return 0.018;
+      }
+      
+      return 0;
+    }
+
     function hitungDenganAnimasi() {
       document.getElementById('loadingOverlay').style.display = 'flex';
       
@@ -961,20 +1082,20 @@
       let secondValue = parseFloat(document.getElementById('secondInput').value);
 
       // Shopee fee calculations
-      let catS = parseFloat(document.getElementById('jenisShopee').value);
-      let sst = parseFloat(document.getElementById('sstShopee').value);
-      let promo = document.getElementById('promoShopee').checked ? 0.054 : 0;
-      let orderFlat = 1250;
-      let pph = 0.005;
+      let adminFee = getShopeeAdminFee();
+      let xtraFee = getXtraFee();
+      let orderFee = getOrderFee();
+      let paymentFee = getPaymentFee();
+      let pphFinal = 0.005; // PPh Final 0.5%
 
       // Tokopedia fee calculations
       let plat = parseFloat(document.getElementById('platTok').value) / 100;
       let dyn = parseFloat(document.getElementById('dynTok').value) / 100;
+      let pphToko = 0.005; // PPh Final 0.5%
 
-      // Calculate total fees
-      let totalFeeShopeeBase = catS + promo + pph;
-      let totalFeeShopee = totalFeeShopeeBase + (totalFeeShopeeBase * sst);
-      let totalFeeToko = plat + dyn + pph;
+      // Calculate total percentage fees for Shopee
+      let totalFeeShopeePercent = adminFee + xtraFee + paymentFee + pphFinal;
+      let totalFeeToko = plat + dyn + pphToko;
 
       let finalShopee, finalTokopedia, profitShopee, profitTokopedia, targetProfit, sellPrice;
 
@@ -984,18 +1105,23 @@
         let bersih = buy + targetProfit;
 
         // Calculate required selling prices
-        finalShopee = (bersih + orderFlat) / (1 - totalFeeShopee);
+        finalShopee = (bersih + orderFee) / (1 - totalFeeShopeePercent);
         finalTokopedia = bersih / (1 - totalFeeToko);
 
         // Apply Tokopedia dynamic fee cap
         if ((finalTokopedia * dyn) > 40000) {
-          finalTokopedia = bersih / (1 - plat - (40000 / finalTokopedia) - pph);
+          let cappedDyn = 40000 / finalTokopedia;
+          let adjustedTotalFee = plat + cappedDyn + pphToko;
+          finalTokopedia = bersih / (1 - adjustedTotalFee);
         }
 
         // Calculate actual profits (should match target)
-        let totalShopeeDeduction = (finalShopee * totalFeeShopee) + orderFlat;
+        let totalShopeeDeduction = (finalShopee * totalFeeShopeePercent) + orderFee;
         profitShopee = finalShopee - buy - totalShopeeDeduction;
-        profitTokopedia = finalTokopedia - buy - (finalTokopedia * totalFeeToko);
+        
+        let tokoDynFee = Math.min(finalTokopedia * dyn, 40000);
+        let tokoOtherFees = finalTokopedia * (plat + pphToko);
+        profitTokopedia = finalTokopedia - buy - tokoDynFee - tokoOtherFees;
 
       } else {
         // Mode Harga Jual Langsung - Calculate profit from given selling price
@@ -1004,14 +1130,17 @@
         finalTokopedia = sellPrice;
 
         // Calculate profits after all fees
-        let totalShopeeDeduction = (finalShopee * totalFeeShopee) + orderFlat;
+        let totalShopeeDeduction = (finalShopee * totalFeeShopeePercent) + orderFee;
         profitShopee = finalShopee - buy - totalShopeeDeduction;
         
         // Handle Tokopedia dynamic fee cap
         let tokoDynFee = Math.min(finalTokopedia * dyn, 40000);
-        let tokoOtherFees = finalTokopedia * (plat + pph);
+        let tokoOtherFees = finalTokopedia * (plat + pphToko);
         profitTokopedia = finalTokopedia - buy - tokoDynFee - tokoOtherFees;
       }
+
+      // Generate fee breakdown for Shopee
+      let shopeeBreakdown = generateShopeeBreakdown(finalShopee, adminFee, xtraFee, paymentFee, pphFinal, orderFee);
 
       // Generate results based on mode
       let modeIndicator = mode === 'profit' ? 
@@ -1031,10 +1160,9 @@
               <div class="result-card-value">Rp ${formatRupiah(targetProfit)}</div>
             </div>
             <div class="result-card">
-              <div class="result-card-title">Fee Breakdown</div>
+              <div class="result-card-title">Seller Status</div>
               <div class="result-card-value">
-                <div style="font-size: 0.9rem; margin-bottom: 6px;">Shopee: ${(totalFeeShopeeBase * 100).toFixed(2)}%${sst > 0 ? ` + SST ${(sst * 100).toFixed(0)}%` : ''}</div>
-                <div style="font-size: 0.9rem;">Tokopedia: ${(totalFeeToko * 100).toFixed(2)}%</div>
+                <div style="font-size: 0.9rem;">${getSellerTypeText()}</div>
               </div>
             </div>
           </div>
@@ -1051,10 +1179,9 @@
               <div class="result-card-value">Rp ${formatRupiah(sellPrice)}</div>
             </div>
             <div class="result-card">
-              <div class="result-card-title">Fee Breakdown</div>
+              <div class="result-card-title">Seller Status</div>
               <div class="result-card-value">
-                <div style="font-size: 0.9rem; margin-bottom: 6px;">Shopee: ${(totalFeeShopeeBase * 100).toFixed(2)}%${sst > 0 ? ` + SST ${(sst * 100).toFixed(0)}%` : ''}</div>
-                <div style="font-size: 0.9rem;">Tokopedia: ${(totalFeeToko * 100).toFixed(2)}%</div>
+                <div style="font-size: 0.9rem;">${getSellerTypeText()}</div>
               </div>
             </div>
           </div>
@@ -1098,10 +1225,12 @@
           ${priceCardsContent}
         </div>
         
+        ${shopeeBreakdown}
+        
         <div class="disclaimer">
-          <strong>Update 2025:</strong> Shopee menerapkan SST 8% di atas semua fee marketplace. 
-          Tokopedia menggunakan komisi dinamis maksimum Rp40.000/item. 
-          Semua perhitungan sudah termasuk PPh Final 0.5% sesuai regulasi terbaru.
+          <strong>Update Juli 2025:</strong> Shopee menerapkan Order Fee Rp1.250 per pesanan terselesaikan. 
+          Admin Fee berlaku setelah 50 pesanan untuk Non-Star, XTRA Fee dibebaskan 200 pesanan pertama. 
+          PPh Final 0.5% sudah termasuk dalam perhitungan sesuai regulasi terbaru.
         </div>
       `;
 
@@ -1116,6 +1245,39 @@
           });
         }, 100);
       }
+    }
+
+    function getSellerTypeText() {
+      const sellerType = document.getElementById('sellerType').value;
+      const sellerTypes = {
+        'new': 'Non-Star Baru (Bebas Fee)',
+        'nonstar': 'Non-Star (≥50 pesanan)',
+        'star': 'Star Seller',
+        'starplus': 'Star+ Seller',
+        'mall': 'Shopee Mall'
+      };
+      return sellerTypes[sellerType] || 'Unknown';
+    }
+
+    function generateShopeeBreakdown(finalPrice, adminFee, xtraFee, paymentFee, pphFinal, orderFee) {
+      const adminAmount = finalPrice * adminFee;
+      const xtraAmount = finalPrice * xtraFee;
+      const paymentAmount = finalPrice * paymentFee;
+      const pphAmount = finalPrice * pphFinal;
+      const totalPercentageFee = adminAmount + xtraAmount + paymentAmount + pphAmount;
+      const totalFee = totalPercentageFee + orderFee;
+
+      return `
+        <div class="fee-breakdown">
+          <h4><i class="fas fa-receipt"></i> Breakdown Biaya Shopee</h4>
+          ${adminFee > 0 ? `<div class="fee-item"><span>Admin Fee (${(adminFee * 100).toFixed(2)}%)</span><span>Rp ${formatRupiah(Math.ceil(adminAmount))}</span></div>` : ''}
+          ${xtraFee > 0 ? `<div class="fee-item"><span>XTRA Fee (${(xtraFee * 100).toFixed(1)}%)</span><span>Rp ${formatRupiah(Math.ceil(xtraAmount))}</span></div>` : ''}
+          ${paymentFee > 0 ? `<div class="fee-item"><span>Payment Fee (${(paymentFee * 100).toFixed(1)}%)</span><span>Rp ${formatRupiah(Math.ceil(paymentAmount))}</span></div>` : ''}
+          <div class="fee-item"><span>PPh Final (0.5%)</span><span>Rp ${formatRupiah(Math.ceil(pphAmount))}</span></div>
+          ${orderFee > 0 ? `<div class="fee-item"><span>Order Fee (Flat)</span><span>Rp ${formatRupiah(orderFee)}</span></div>` : ''}
+          <div class="fee-item fee-total"><span><strong>Total Biaya</strong></span><span><strong>Rp ${formatRupiah(Math.ceil(totalFee))}</strong></span></div>
+        </div>
+      `;
     }
 
     // Auto-calculate with debouncing
@@ -1142,3 +1304,5 @@
       }
     });
   </script>
+</body>
+</html>
