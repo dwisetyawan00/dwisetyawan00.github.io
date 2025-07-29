@@ -121,6 +121,14 @@
       gap: 25px;
     }
 
+    .mode-selector {
+      margin-bottom: 25px;
+    }
+
+    .mode-selector .input-group {
+      margin-bottom: 0;
+    }
+
     .platform-configs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -296,48 +304,18 @@
       transition: all 0.3s ease;
       cursor: pointer;
       min-height: 60px;
-      position: relative;
     }
 
     .checkbox-container input[type="checkbox"] {
-      position: absolute;
-      opacity: 0;
+      width: 20px;
+      height: 20px;
+      accent-color: var(--text-primary);
       cursor: pointer;
-      height: 0;
-      width: 0;
-    }
-
-    .custom-checkbox {
-      width: 22px;
-      height: 22px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
       flex-shrink: 0;
-      margin-top: 1px;
-      cursor: pointer;
-    }
-
-    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox {
-      background: rgba(255, 255, 255, 0.9);
-      border-color: rgba(255, 255, 255, 0.9);
-    }
-
-    .custom-checkbox::after {
-      content: '✓';
-      color: #333;
-      font-weight: bold;
-      font-size: 14px;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox::after {
-      opacity: 1;
+      margin-top: 2px;
+      -webkit-appearance: checkbox;
+      -moz-appearance: checkbox;
+      appearance: checkbox;
     }
 
     .checkbox-container label {
@@ -348,12 +326,6 @@
       font-size: 0.95rem;
       line-height: 1.4;
       flex: 1;
-      margin-left: 0;
-    }
-
-    .checkbox-container:hover .custom-checkbox {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.5);
     }
 
     .calculate-section {
@@ -568,6 +540,28 @@
       100% { transform: rotate(360deg); }
     }
 
+    /* Mode indicator styles */
+    .mode-indicator {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .mode-profit {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .mode-sell {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
     @media (max-width: 1200px) {
       .platform-configs {
         grid-template-columns: 1fr;
@@ -666,13 +660,9 @@
         min-height: auto;
       }
       
-      .custom-checkbox {
-        width: 20px;
-        height: 20px;
-      }
-      
-      .custom-checkbox::after {
-        font-size: 12px;
+      .checkbox-container input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
       }
       
       .checkbox-container label {
@@ -783,13 +773,9 @@
         gap: 10px;
       }
       
-      .custom-checkbox {
-        width: 18px;
-        height: 18px;
-      }
-      
-      .custom-checkbox::after {
-        font-size: 11px;
+      .checkbox-container input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
       }
       
       .checkbox-container label {
@@ -826,6 +812,17 @@
           Konfigurasi Dasar
         </div>
         
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+          <div class="input-group">
+            <label>Mode Perhitungan</label>
+            <select id="calculationMode" onchange="toggleMode()">
+              <option value="profit">Target Profit - Hitung harga jual dari target laba</option>
+              <option value="sell">Harga Jual Langsung - Hitung laba dari harga jual</option>
+            </select>
+          </div>
+        </div>
+        
         <div class="input-row">
           <div class="input-group">
             <label>Modal Awal</label>
@@ -835,10 +832,10 @@
             </div>
           </div>
 
-          <div class="input-group">
-            <label>Target Profit Bersih</label>
+          <div class="input-group" id="secondInputGroup">
+            <label id="secondInputLabel">Target Profit Bersih</label>
             <div class="input-wrapper">
-              <input type="number" id="marginManual" value="2500" placeholder="Target keuntungan yang diinginkan">
+              <input type="number" id="secondInput" value="2500" placeholder="Target keuntungan yang diinginkan">
               <span class="currency-icon">Rp</span>
             </div>
           </div>
@@ -876,7 +873,6 @@
 
           <div class="checkbox-container">
             <input type="checkbox" id="promoShopee" checked>
-            <div class="custom-checkbox"></div>
             <label for="promoShopee">Gratis Ongkir XTRA & Marketing Programs (~5.4%)</label>
           </div>
         </div>
@@ -929,6 +925,27 @@
       return new Intl.NumberFormat('id-ID').format(number);
     }
 
+    function toggleMode() {
+      const mode = document.getElementById('calculationMode').value;
+      const secondInputLabel = document.getElementById('secondInputLabel');
+      const secondInput = document.getElementById('secondInput');
+      
+      if (mode === 'profit') {
+        secondInputLabel.textContent = 'Target Profit Bersih';
+        secondInput.placeholder = 'Target keuntungan yang diinginkan';
+        secondInput.value = '2500';
+      } else {
+        secondInputLabel.textContent = 'Harga Jual Langsung';
+        secondInput.placeholder = 'Harga jual yang ingin dipasang';
+        secondInput.value = '15000';
+      }
+      
+      // Reset hasil jika sudah ada
+      if (document.getElementById('result').style.display === 'block') {
+        hitung();
+      }
+    }
+
     function hitungDenganAnimasi() {
       document.getElementById('loadingOverlay').style.display = 'flex';
       
@@ -939,62 +956,114 @@
     }
 
     function hitung() {
+      const mode = document.getElementById('calculationMode').value;
       let buy = parseFloat(document.getElementById('buy').value);
-      let laba = parseFloat(document.getElementById('marginManual').value);
-      let bersih = buy + laba;
+      let secondValue = parseFloat(document.getElementById('secondInput').value);
 
-      // Shopee Calculation with SST 8%
+      // Shopee fee calculations
       let catS = parseFloat(document.getElementById('jenisShopee').value);
       let sst = parseFloat(document.getElementById('sstShopee').value);
       let promo = document.getElementById('promoShopee').checked ? 0.054 : 0;
       let orderFlat = 1250;
       let pph = 0.005;
 
-      // Total Shopee fees = Category Commission + Promo + PPh, then add SST on top
-      let totalFeeShopeeBase = catS + promo + pph;
-      let totalFeeShopee = totalFeeShopeeBase + (totalFeeShopeeBase * sst); // SST applied on base fees
-      let finalShopee = (bersih + orderFlat) / (1 - totalFeeShopee);
-
-      // Tokopedia Calculation (unchanged logic)
+      // Tokopedia fee calculations
       let plat = parseFloat(document.getElementById('platTok').value) / 100;
       let dyn = parseFloat(document.getElementById('dynTok').value) / 100;
 
+      // Calculate total fees
+      let totalFeeShopeeBase = catS + promo + pph;
+      let totalFeeShopee = totalFeeShopeeBase + (totalFeeShopeeBase * sst);
       let totalFeeToko = plat + dyn + pph;
-      let finalTokopedia = bersih / (1 - totalFeeToko);
 
-      // Dynamic fee cap at Rp 40,000 per item
-      if ((finalTokopedia * dyn) > 40000) {
-        finalTokopedia = (bersih) / (1 - plat - (40000 / finalTokopedia) - pph);
+      let finalShopee, finalTokopedia, profitShopee, profitTokopedia, targetProfit, sellPrice;
+
+      if (mode === 'profit') {
+        // Mode Target Profit - Calculate selling price from desired profit
+        targetProfit = secondValue;
+        let bersih = buy + targetProfit;
+
+        // Calculate required selling prices
+        finalShopee = (bersih + orderFlat) / (1 - totalFeeShopee);
+        finalTokopedia = bersih / (1 - totalFeeToko);
+
+        // Apply Tokopedia dynamic fee cap
+        if ((finalTokopedia * dyn) > 40000) {
+          finalTokopedia = bersih / (1 - plat - (40000 / finalTokopedia) - pph);
+        }
+
+        // Calculate actual profits (should match target)
+        let totalShopeeDeduction = (finalShopee * totalFeeShopee) + orderFlat;
+        profitShopee = finalShopee - buy - totalShopeeDeduction;
+        profitTokopedia = finalTokopedia - buy - (finalTokopedia * totalFeeToko);
+
+      } else {
+        // Mode Harga Jual Langsung - Calculate profit from given selling price
+        sellPrice = secondValue;
+        finalShopee = sellPrice;
+        finalTokopedia = sellPrice;
+
+        // Calculate profits after all fees
+        let totalShopeeDeduction = (finalShopee * totalFeeShopee) + orderFlat;
+        profitShopee = finalShopee - buy - totalShopeeDeduction;
+        
+        // Handle Tokopedia dynamic fee cap
+        let tokoDynFee = Math.min(finalTokopedia * dyn, 40000);
+        let tokoOtherFees = finalTokopedia * (plat + pph);
+        profitTokopedia = finalTokopedia - buy - tokoDynFee - tokoOtherFees;
       }
 
-      // Calculate actual profits
-      let totalShopeeDeduction = (finalShopee * totalFeeShopee) + orderFlat;
-      let profitShopee = finalShopee - buy - totalShopeeDeduction;
-      let profitTokopedia = finalTokopedia - buy - (finalTokopedia * totalFeeToko);
+      // Generate results based on mode
+      let modeIndicator = mode === 'profit' ? 
+        '<div class="mode-indicator mode-profit">Mode: Target Profit</div>' : 
+        '<div class="mode-indicator mode-sell">Mode: Harga Jual Langsung</div>';
 
-      // Display detailed breakdown
-      let sstDisplay = sst > 0 ? ` + SST ${(sst * 100).toFixed(0)}%` : '';
-      
-      document.getElementById('resultContent').innerHTML = `
-        <div class="result-grid">
-          <div class="result-card">
-            <div class="result-card-title">Modal Investasi</div>
-            <div class="result-card-value">Rp ${formatRupiah(buy)}</div>
-          </div>
-          <div class="result-card">
-            <div class="result-card-title">Target Profit</div>
-            <div class="result-card-value">Rp ${formatRupiah(laba)}</div>
-          </div>
-          <div class="result-card">
-            <div class="result-card-title">Fee Breakdown</div>
-            <div class="result-card-value">
-              <div style="font-size: 0.9rem; margin-bottom: 6px;">Shopee: ${(totalFeeShopeeBase * 100).toFixed(2)}%${sstDisplay}</div>
-              <div style="font-size: 0.9rem;">Tokopedia: ${(totalFeeToko * 100).toFixed(2)}%</div>
+      let resultGrid = '';
+      if (mode === 'profit') {
+        resultGrid = `
+          <div class="result-grid">
+            <div class="result-card">
+              <div class="result-card-title">Modal Investasi</div>
+              <div class="result-card-value">Rp ${formatRupiah(buy)}</div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-title">Target Profit</div>
+              <div class="result-card-value">Rp ${formatRupiah(targetProfit)}</div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-title">Fee Breakdown</div>
+              <div class="result-card-value">
+                <div style="font-size: 0.9rem; margin-bottom: 6px;">Shopee: ${(totalFeeShopeeBase * 100).toFixed(2)}%${sst > 0 ? ` + SST ${(sst * 100).toFixed(0)}%` : ''}</div>
+                <div style="font-size: 0.9rem;">Tokopedia: ${(totalFeeToko * 100).toFixed(2)}%</div>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div class="final-prices">
+        `;
+      } else {
+        resultGrid = `
+          <div class="result-grid">
+            <div class="result-card">
+              <div class="result-card-title">Modal Investasi</div>
+              <div class="result-card-value">Rp ${formatRupiah(buy)}</div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-title">Harga Jual</div>
+              <div class="result-card-value">Rp ${formatRupiah(sellPrice)}</div>
+            </div>
+            <div class="result-card">
+              <div class="result-card-title">Fee Breakdown</div>
+              <div class="result-card-value">
+                <div style="font-size: 0.9rem; margin-bottom: 6px;">Shopee: ${(totalFeeShopeeBase * 100).toFixed(2)}%${sst > 0 ? ` + SST ${(sst * 100).toFixed(0)}%` : ''}</div>
+                <div style="font-size: 0.9rem;">Tokopedia: ${(totalFeeToko * 100).toFixed(2)}%</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      let priceCardsContent = '';
+      if (mode === 'profit') {
+        priceCardsContent = `
           <div class="price-card shopee">
             <div class="platform-name">Shopee Price</div>
             <div class="price-amount">Rp ${formatRupiah(Math.ceil(finalShopee))}</div>
@@ -1005,6 +1074,28 @@
             <div class="price-amount">Rp ${formatRupiah(Math.ceil(finalTokopedia))}</div>
             <div class="profit-info">Net Profit: Rp ${formatRupiah(Math.ceil(profitTokopedia))}</div>
           </div>
+        `;
+      } else {
+        priceCardsContent = `
+          <div class="price-card shopee">
+            <div class="platform-name">Shopee Profit</div>
+            <div class="price-amount">Rp ${formatRupiah(Math.ceil(profitShopee))}</div>
+            <div class="profit-info">Dari harga jual: Rp ${formatRupiah(Math.ceil(finalShopee))}</div>
+          </div>
+          <div class="price-card tokopedia">
+            <div class="platform-name">Tokopedia Profit</div>
+            <div class="price-amount">Rp ${formatRupiah(Math.ceil(profitTokopedia))}</div>
+            <div class="profit-info">Dari harga jual: Rp ${formatRupiah(Math.ceil(finalTokopedia))}</div>
+          </div>
+        `;
+      }
+
+      document.getElementById('resultContent').innerHTML = `
+        ${modeIndicator}
+        ${resultGrid}
+        
+        <div class="final-prices">
+          ${priceCardsContent}
         </div>
         
         <div class="disclaimer">
@@ -1048,5 +1139,3 @@
       }
     });
   </script>
-</body>
-</html>
