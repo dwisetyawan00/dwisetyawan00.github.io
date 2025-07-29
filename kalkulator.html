@@ -942,7 +942,7 @@
       
       // Reset hasil jika sudah ada
       if (document.getElementById('result').style.display === 'block') {
-        hitung();
+        hitung(false); // Don't scroll when mode changes
       }
     }
 
@@ -950,12 +950,12 @@
       document.getElementById('loadingOverlay').style.display = 'flex';
       
       setTimeout(() => {
-        hitung();
+        hitung(true); // Pass true to enable scrolling when button is clicked
         document.getElementById('loadingOverlay').style.display = 'none';
       }, 800);
     }
 
-    function hitung() {
+    function hitung(shouldScroll = false) {
       const mode = document.getElementById('calculationMode').value;
       let buy = parseFloat(document.getElementById('buy').value);
       let secondValue = parseFloat(document.getElementById('secondInput').value);
@@ -1107,12 +1107,15 @@
 
       document.getElementById('result').style.display = 'block';
       
-      setTimeout(() => {
-        document.getElementById('result').scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'nearest'
-        });
-      }, 100);
+      // Only scroll when explicitly requested (when calculate button is pressed)
+      if (shouldScroll) {
+        setTimeout(() => {
+          document.getElementById('result').scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'nearest'
+          });
+        }, 100);
+      }
     }
 
     // Auto-calculate with debouncing
@@ -1124,7 +1127,7 @@
           clearTimeout(timeout);
           timeout = setTimeout(() => {
             if (document.getElementById('result').style.display === 'block') {
-              hitung();
+              hitung(false); // Don't scroll on auto-calculation
             }
           }, 500);
         });
