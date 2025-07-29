@@ -296,18 +296,48 @@
       transition: all 0.3s ease;
       cursor: pointer;
       min-height: 60px;
+      position: relative;
     }
 
     .checkbox-container input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      accent-color: var(--text-primary);
+      position: absolute;
+      opacity: 0;
       cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .custom-checkbox {
+      width: 22px;
+      height: 22px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
       flex-shrink: 0;
-      margin-top: 2px;
-      -webkit-appearance: checkbox;
-      -moz-appearance: checkbox;
-      appearance: checkbox;
+      margin-top: 1px;
+      cursor: pointer;
+    }
+
+    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .custom-checkbox::after {
+      content: '✓';
+      color: #333;
+      font-weight: bold;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .checkbox-container input[type="checkbox"]:checked + .custom-checkbox::after {
+      opacity: 1;
     }
 
     .checkbox-container label {
@@ -318,6 +348,12 @@
       font-size: 0.95rem;
       line-height: 1.4;
       flex: 1;
+      margin-left: 0;
+    }
+
+    .checkbox-container:hover .custom-checkbox {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
     }
 
     .calculate-section {
@@ -630,9 +666,13 @@
         min-height: auto;
       }
       
-      .checkbox-container input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
+      .custom-checkbox {
+        width: 20px;
+        height: 20px;
+      }
+      
+      .custom-checkbox::after {
+        font-size: 12px;
       }
       
       .checkbox-container label {
@@ -743,9 +783,13 @@
         gap: 10px;
       }
       
-      .checkbox-container input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
+      .custom-checkbox {
+        width: 18px;
+        height: 18px;
+      }
+      
+      .custom-checkbox::after {
+        font-size: 11px;
       }
       
       .checkbox-container label {
@@ -832,6 +876,7 @@
 
           <div class="checkbox-container">
             <input type="checkbox" id="promoShopee" checked>
+            <div class="custom-checkbox"></div>
             <label for="promoShopee">Gratis Ongkir XTRA & Marketing Programs (~5.4%)</label>
           </div>
         </div>
