@@ -9,9 +9,9 @@
     <style>
         /* ========== GANTI LOGO & BRANDING DI SINI ========== */
         :root {
-            --logo-url: url('https://i.imgur.com/xPXIpD9.jpeg'); /* GANTI DENGAN URL LOGO ANDA */
-            --company-name: 'Tria'; /* GANTI NAMA COMPANY */
-            --tagline: 'Neo-Banking Platform'; /* GANTI TAGLINE */
+            --logo-url: url('https://i.imgur.com/xPXIpD9.jpeg');
+            --company-name: 'Tria';
+            --tagline: 'Neo-Banking Platform';
         }
         /* ================================================== */
         @keyframes slide-in {
@@ -22,13 +22,16 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         .animate-slide-in { animation: slide-in 0.3s ease-out; }
         .animate-fade-in { animation: fade-in 0.3s ease-out; }
+        .animate-spin { animation: spin 1s linear infinite; }
         
-        /* Smooth transitions */
         * { transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform; }
         
-        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1f2937; }
         ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 4px; }
@@ -40,13 +43,36 @@
     <!-- Notifications Container -->
     <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-gray-900 border border-gray-700 rounded-2xl p-8 max-w-sm w-full text-center">
+            <div class="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <h3 id="loading-title" class="text-xl font-bold mb-2">Processing...</h3>
+            <p id="loading-text" class="text-gray-400 text-sm">Please wait</p>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="closeModal(event)">
+        <div class="bg-gray-900 border border-gray-700 rounded-2xl p-8 max-w-md w-full animate-fade-in" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+                <h3 id="modal-title" class="text-2xl font-bold"></h3>
+                <button onclick="closeModal()" class="p-2 hover:bg-gray-800 rounded-lg transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="border-b border-gray-800/50 bg-black/30 backdrop-blur-xl sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="relative">
-                        <!-- Logo akan muncul di sini, edit di bagian CSS :root -->
                         <div id="logo-container" class="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
@@ -80,7 +106,7 @@
                 </nav>
 
                 <button onclick="toggleMenu()" class="lg:hidden p-2 hover:bg-gray-800/50 rounded-xl transition">
-                    <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
@@ -144,11 +170,11 @@
                         </div>
 
                         <div class="flex flex-col sm:flex-row gap-3">
-                            <button onclick="showNotification('Add Funds modal opened')" class="flex-1 flex items-center justify-center gap-2 bg-white text-purple-600 font-semibold py-4 px-6 rounded-2xl hover:bg-gray-100 transition shadow-lg">
+                            <button onclick="openAddFundsModal()" class="flex-1 flex items-center justify-center gap-2 bg-white text-purple-600 font-semibold py-4 px-6 rounded-2xl hover:bg-gray-100 transition shadow-lg">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                 Add Funds
                             </button>
-                            <button onclick="showNotification('Send modal opened')" class="flex-1 flex items-center justify-center gap-2 bg-white/20 backdrop-blur-sm text-white font-semibold py-4 px-6 rounded-2xl hover:bg-white/30 transition">
+                            <button onclick="openSendModal()" class="flex-1 flex items-center justify-center gap-2 bg-white/20 backdrop-blur-sm text-white font-semibold py-4 px-6 rounded-2xl hover:bg-white/30 transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                                 Send
                             </button>
@@ -216,7 +242,7 @@
                         </div>
                     </div>
 
-                    <button onclick="executeStake()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-emerald-600 transition shadow-lg shadow-green-500/30">
+                    <button onclick="confirmStake()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-emerald-600 transition shadow-lg shadow-green-500/30">
                         Stake Now
                     </button>
                 </div>
@@ -238,7 +264,7 @@
                         <div class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-gray-700 rounded-3xl p-8 shadow-2xl aspect-[1.586/1]">
                             <div class="h-full flex flex-col justify-between">
                                 <div class="flex items-start justify-between">
-                                    <div class="w-14 h-14 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center shadow-lg">
+                                    <div id="card-logo" class="w-14 h-14 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
                                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
                                     </div>
                                     <div class="text-right">
@@ -266,7 +292,7 @@
                     </div>
                 </div>
 
-                <button onclick="showNotification('Physical card request submitted!')" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 px-6 rounded-xl hover:from-green-600 hover:to-emerald-600 transition shadow-lg">
+                <button onclick="openRequestCardModal()" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 px-6 rounded-xl hover:from-green-600 hover:to-emerald-600 transition shadow-lg">
                     Request Physical Card
                 </button>
             </div>
@@ -349,7 +375,7 @@
                             </div>
                         </div>
 
-                        <button onclick="executeTrade()" class="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold py-4 px-6 rounded-xl hover:from-purple-700 hover:to-fuchsia-700 transition shadow-lg shadow-purple-500/30">
+                        <button onclick="confirmTrade()" class="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold py-4 px-6 rounded-xl hover:from-purple-700 hover:to-fuchsia-700 transition shadow-lg shadow-purple-500/30">
                             Execute Trade
                         </button>
                     </div>
@@ -369,14 +395,13 @@
     </footer>
 
     <script>
-        // ========== KONFIGURASI LOGO & BRANDING ========== 
+        // Config
         const CONFIG = {
-            logoUrl: 'https://i.imgur.com/xPXIpD9.jpeg', // GANTI URL LOGO ANDA DI SINI
-            companyName: 'Tria', // GANTI NAMA COMPANY
-            tagline: 'Neo-Banking Platform', // GANTI TAGLINE
-            useCustomLogo: true // Set TRUE jika sudah punya logo, FALSE untuk pakai icon default
+            logoUrl: 'https://i.imgur.com/xPXIpD9.jpeg',
+            companyName: 'Tria',
+            tagline: 'Neo-Banking Platform',
+            useCustomLogo: true
         };
-        // ================================================
 
         // State
         let showBalanceState = true;
@@ -392,15 +417,11 @@
 
         // Initialize Branding
         function initializeBranding() {
-            // Update document title & favicon
             document.title = `${CONFIG.companyName} - ${CONFIG.tagline}`;
-            
-            // Update company name & tagline in header
             document.getElementById('company-name').textContent = CONFIG.companyName;
             document.getElementById('company-tagline').textContent = CONFIG.tagline;
             
-            // Update logo if custom logo is provided
-            if (CONFIG.useCustomLogo && CONFIG.logoUrl !== 'https://imgur.com/a/YprQQAU') {
+            if (CONFIG.useCustomLogo && CONFIG.logoUrl) {
                 const logoContainer = document.getElementById('logo-container');
                 logoContainer.innerHTML = '';
                 logoContainer.style.padding = '0';
@@ -411,19 +432,25 @@
                 img.alt = CONFIG.companyName + ' logo';
                 img.className = 'w-full h-full object-cover';
                 img.onerror = function() {
-                    // If image fails to load, show default icon
-                    logoContainer.innerHTML = `
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                        </svg>
-                    `;
+                    logoContainer.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>`;
                 };
                 logoContainer.appendChild(img);
                 
-                // Update favicon
                 const favicon = document.querySelector("link[rel~='icon']");
-                if (favicon) {
-                    favicon.href = CONFIG.logoUrl;
+                if (favicon) favicon.href = CONFIG.logoUrl;
+                
+                const cardLogo = document.getElementById('card-logo');
+                if (cardLogo) {
+                    cardLogo.innerHTML = '';
+                    cardLogo.style.padding = '0';
+                    const cardImg = document.createElement('img');
+                    cardImg.src = CONFIG.logoUrl;
+                    cardImg.alt = CONFIG.companyName;
+                    cardImg.className = 'w-full h-full object-cover';
+                    cardImg.onerror = function() {
+                        cardLogo.innerHTML = `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>`;
+                    };
+                    cardLogo.appendChild(cardImg);
                 }
             }
         }
@@ -455,15 +482,12 @@
         function switchTab(tabName) {
             currentTab = tabName;
             
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.add('hidden');
             });
             
-            // Show selected tab
             document.getElementById('tab-' + tabName).classList.remove('hidden');
             
-            // Update desktop tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 if (btn.dataset.tab === tabName) {
                     btn.classList.add('bg-gradient-to-r', 'from-violet-600', 'to-fuchsia-600', 'text-white', 'shadow-lg', 'shadow-purple-500/30');
@@ -474,7 +498,6 @@
                 }
             });
             
-            // Update mobile tab buttons
             document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
                 if (btn.dataset.tab === tabName) {
                     btn.classList.add('bg-gradient-to-r', 'from-violet-600', 'to-fuchsia-600', 'text-white');
@@ -486,22 +509,17 @@
             });
         }
 
-        // Toggle Menu
         function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
-        // Toggle Balance
         function toggleBalance() {
             showBalanceState = !showBalanceState;
-            const display = document.getElementById('balance-display');
-            display.textContent = showBalanceState ? `${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••';
+            document.getElementById('balance-display').textContent = showBalanceState ? `${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••';
         }
 
-        // Copy Address
         function copyAddress() {
-            showNotification('Wallet address copied!');
+            showNotification('Wallet address copied: 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb', 'success');
             document.getElementById('copy-text').textContent = 'Copied!';
             document.getElementById('copy-icon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
             
@@ -512,21 +530,260 @@
         }
 
         // Notifications
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
             const container = document.getElementById('notifications');
             const notif = document.createElement('div');
-            notif.className = 'bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in';
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            const icons = {
+                success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>',
+                error: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>',
+                warning: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>',
+                info: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
+            };
+            
+            notif.className = `${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in`;
             notif.innerHTML = `
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    ${icons[type]}
                 </svg>
-                ${message}
+                <span class="text-sm">${message}</span>
             `;
             container.appendChild(notif);
             
             setTimeout(() => {
-                notif.remove();
-            }, 3000);
+                notif.style.opacity = '0';
+                notif.style.transform = 'translateX(100%)';
+                setTimeout(() => notif.remove(), 300);
+            }, 4000);
+        }
+
+        // Loading
+        function showLoading(title, text) {
+            document.getElementById('loading-title').textContent = title;
+            document.getElementById('loading-text').textContent = text;
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        // Modal Functions
+        function showModal(title, content) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('modal-overlay').classList.remove('hidden');
+        }
+
+        function closeModal(event) {
+            if (!event || event.target.id === 'modal-overlay') {
+                document.getElementById('modal-overlay').classList.add('hidden');
+            }
+        }
+
+        // Add Funds Modal
+        function openAddFundsModal() {
+            const content = `
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Select Payment Method</label>
+                        <select id="payment-method" class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-3 rounded-xl outline-none cursor-pointer focus:border-purple-500">
+                            <option value="bank">🏦 Bank Transfer</option>
+                            <option value="card">💳 Credit/Debit Card</option>
+                            <option value="crypto">₿ Crypto Wallet</option>
+                            <option value="paypal">💰 PayPal</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Amount (USD)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">$</span>
+                            <input id="add-funds-amount" type="number" class="w-full bg-gray-800 border border-gray-700 text-white pl-8 pr-4 py-3 rounded-xl outline-none focus:border-purple-500" placeholder="0.00" min="10" max="50000">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Min: $10 | Max: $50,000</p>
+                    </div>
+                    <div class="bg-purple-600/10 border border-purple-500/30 rounded-xl p-4">
+                        <div class="flex items-start gap-2 text-sm text-purple-300">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Funds will be available instantly with zero fees</span>
+                        </div>
+                    </div>
+                    <button onclick="processAddFunds()" class="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold py-3 px-6 rounded-xl hover:from-purple-700 hover:to-fuchsia-700 transition">
+                        Continue to Payment
+                    </button>
+                </div>
+            `;
+            showModal('Add Funds', content);
+        }
+
+        async function processAddFunds() {
+            const amount = parseFloat(document.getElementById('add-funds-amount').value);
+            const method = document.getElementById('payment-method').value;
+            
+            if (!amount || amount < 10) {
+                showNotification('Minimum deposit is $10', 'warning');
+                return;
+            }
+            
+            if (amount > 50000) {
+                showNotification('Maximum deposit is $50,000', 'warning');
+                return;
+            }
+            
+            closeModal();
+            showLoading('Processing Deposit', `Adding ${amount.toFixed(2)} via ${method}...`);
+            
+            await new Promise(resolve => setTimeout(resolve, 2500));
+            
+            currentBalance += amount;
+            document.getElementById('balance-display').textContent = showBalanceState ? 
+                `${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••';
+            
+            hideLoading();
+            showNotification(`Successfully added ${amount.toFixed(2)} to your account`, 'success');
+        }
+
+        // Send Modal
+        function openSendModal() {
+            const content = `
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Recipient Address</label>
+                        <input id="send-address" type="text" class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-3 rounded-xl outline-none focus:border-purple-500 font-mono text-sm" placeholder="0x... or ENS name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Amount</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">$</span>
+                            <input id="send-amount" type="number" class="w-full bg-gray-800 border border-gray-700 text-white pl-8 pr-20 py-3 rounded-xl outline-none focus:border-purple-500" placeholder="0.00">
+                            <button onclick="setSendMax()" class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-purple-400 hover:text-purple-300 font-medium">Max</button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Available: ${currentBalance.toFixed(2)}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Network</label>
+                        <select id="send-network" class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-3 rounded-xl outline-none cursor-pointer focus:border-purple-500">
+                            <option>Ethereum (ETH)</option>
+                            <option>Polygon (MATIC)</option>
+                            <option>Arbitrum (ARB)</option>
+                            <option>Optimism (OP)</option>
+                            <option>Base</option>
+                        </select>
+                    </div>
+                    <div class="bg-green-600/10 border border-green-500/30 rounded-xl p-4">
+                        <div class="flex items-start gap-2 text-sm text-green-300">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span>Network Fee: $0.00 (Zero gas fees)</span>
+                        </div>
+                    </div>
+                    <button onclick="processSend()" class="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold py-3 px-6 rounded-xl hover:from-purple-700 hover:to-fuchsia-700 transition">
+                        Send Funds
+                    </button>
+                </div>
+            `;
+            showModal('Send Funds', content);
+        }
+
+        function setSendMax() {
+            document.getElementById('send-amount').value = currentBalance.toFixed(2);
+        }
+
+        async function processSend() {
+            const address = document.getElementById('send-address').value;
+            const amount = parseFloat(document.getElementById('send-amount').value);
+            const network = document.getElementById('send-network').value;
+            
+            if (!address || address.length < 10) {
+                showNotification('Please enter a valid recipient address', 'error');
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                showNotification('Please enter a valid amount', 'error');
+                return;
+            }
+            
+            if (amount > currentBalance) {
+                showNotification('Insufficient balance', 'error');
+                return;
+            }
+            
+            closeModal();
+            showLoading('Sending Funds', `Transferring ${amount.toFixed(2)} on ${network}...`);
+            
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            currentBalance -= amount;
+            document.getElementById('balance-display').textContent = showBalanceState ? 
+                `${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••';
+            
+            hideLoading();
+            showNotification(`Successfully sent ${amount.toFixed(2)} to ${address.substring(0, 10)}...`, 'success');
+        }
+
+        // Request Card Modal
+        function openRequestCardModal() {
+            const content = `
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Full Name</label>
+                        <input id="card-name" type="text" class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-3 rounded-xl outline-none focus:border-purple-500" placeholder="As shown on ID">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Shipping Address</label>
+                        <textarea id="card-address" rows="3" class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-3 rounded-xl outline-none focus:border-purple-500 resize-none" placeholder="Enter your full address"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Card Type</label>
+                        <select id="card-type" class="w-full bg-gray-800 border border-gray-700 text-white px-4 py-3 rounded-xl outline-none cursor-pointer focus:border-purple-500">
+                            <option value="standard">Standard (Free)</option>
+                            <option value="premium">Premium Metal ($49)</option>
+                        </select>
+                    </div>
+                    <div class="bg-blue-600/10 border border-blue-500/30 rounded-xl p-4">
+                        <div class="text-sm text-blue-300 space-y-1">
+                            <p>• Expected delivery: 7-10 business days</p>
+                            <p>• Activate instantly after receiving</p>
+                            <p>• Use anywhere Visa is accepted</p>
+                        </div>
+                    </div>
+                    <button onclick="processRequestCard()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 px-6 rounded-xl hover:from-green-600 hover:to-emerald-600 transition">
+                        Request Physical Card
+                    </button>
+                </div>
+            `;
+            showModal('Request Physical Card', content);
+        }
+
+        async function processRequestCard() {
+            const name = document.getElementById('card-name').value;
+            const address = document.getElementById('card-address').value;
+            const cardType = document.getElementById('card-type').value;
+            
+            if (!name || name.length < 3) {
+                showNotification('Please enter your full name', 'error');
+                return;
+            }
+            
+            if (!address || address.length < 10) {
+                showNotification('Please enter a valid shipping address', 'error');
+                return;
+            }
+            
+            closeModal();
+            showLoading('Processing Request', 'Creating your physical card order...');
+            
+            await new Promise(resolve => setTimeout(resolve, 2500));
+            
+            hideLoading();
+            showNotification(`Physical card requested! Expected delivery: 7-10 days`, 'success');
         }
 
         // Stake Functions
@@ -551,19 +808,78 @@
         }
 
         function setMaxStake() {
-            document.getElementById('stake-input').value = '1000';
+            document.getElementById('stake-input').value = Math.min(currentBalance, 10000).toFixed(2);
             calculateStake();
         }
 
-        function executeStake() {
-            const amount = document.getElementById('stake-input').value;
-            if (amount && parseFloat(amount) > 0) {
-                showNotification(`Successfully staked ${amount} in USDC pool`);
-                document.getElementById('stake-input').value = '';
-                document.getElementById('stake-results').classList.add('hidden');
-            } else {
-                showNotification('Please enter an amount to stake');
+        function confirmStake() {
+            const amount = parseFloat(document.getElementById('stake-input').value);
+            
+            if (!amount || amount <= 0) {
+                showNotification('Please enter an amount to stake', 'warning');
+                return;
             }
+            
+            if (amount > currentBalance) {
+                showNotification('Insufficient balance', 'error');
+                return;
+            }
+            
+            if (amount < 10) {
+                showNotification('Minimum stake is $10', 'warning');
+                return;
+            }
+            
+            const yearlyReturn = (amount * 15.2 / 100).toFixed(2);
+            
+            const content = `
+                <div class="space-y-5">
+                    <div class="bg-gray-800 rounded-xl p-5 space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Stake Amount</span>
+                            <span class="font-bold">${amount.toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">APY</span>
+                            <span class="font-bold text-green-400">15.2%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Expected Yearly Return</span>
+                            <span class="font-bold text-green-400">${yearlyReturn}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Lock Period</span>
+                            <span class="font-bold">Flexible (Unstake anytime)</span>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-600/10 border border-yellow-500/30 rounded-xl p-4">
+                        <div class="flex items-start gap-2 text-sm text-yellow-300">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <span>You can unstake anytime, but rewards are paid daily</span>
+                        </div>
+                    </div>
+                    <button onclick="executeStake(${amount})" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 px-6 rounded-xl hover:from-green-600 hover:to-emerald-600 transition">
+                        Confirm Stake
+                    </button>
+                </div>
+            `;
+            showModal('Confirm Staking', content);
+        }
+
+        async function executeStake(amount) {
+            closeModal();
+            showLoading('Staking USDC', 'Confirming transaction on blockchain...');
+            
+            await new Promise(resolve => setTimeout(resolve, 2800));
+            
+            currentBalance -= amount;
+            document.getElementById('balance-display').textContent = showBalanceState ? 
+                `${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••';
+            
+            hideLoading();
+            showNotification(`Successfully staked ${amount.toFixed(2)} USDC at 15.2% APY`, 'success');
+            document.getElementById('stake-input').value = '';
+            document.getElementById('stake-results').classList.add('hidden');
         }
 
         // Trade Functions
@@ -593,21 +909,85 @@
             const temp = fromSelect.value;
             fromSelect.value = toSelect.value;
             toSelect.value = temp;
+            
+            calculateTrade();
         }
 
-        function executeTrade() {
-            const amount = document.getElementById('trade-from').value;
+        function confirmTrade() {
+            const amount = parseFloat(document.getElementById('trade-from').value);
             const fromChain = document.getElementById('chain-from').value;
             const toChain = document.getElementById('chain-to').value;
             
-            if (amount && parseFloat(amount) > 0) {
-                showNotification(`Trade executed: ${amount} ${fromChain} → ${toChain}`);
-                document.getElementById('trade-from').value = '';
-                document.getElementById('trade-to').value = '';
-                document.getElementById('trade-info').classList.add('hidden');
-            } else {
-                showNotification('Please enter an amount to trade');
+            if (!amount || amount <= 0) {
+                showNotification('Please enter an amount to trade', 'warning');
+                return;
             }
+            
+            if (fromChain === toChain) {
+                showNotification('Please select different chains', 'warning');
+                return;
+            }
+            
+            const toAmount = document.getElementById('trade-to').value;
+            
+            const content = `
+                <div class="space-y-5">
+                    <div class="bg-gray-800 rounded-xl p-5 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">From</span>
+                            <div class="text-right">
+                                <div class="font-bold">${amount} ${fromChain}</div>
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">To</span>
+                            <div class="text-right">
+                                <div class="font-bold text-green-400">${toAmount} ${toChain}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 rounded-xl p-4 space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Rate</span>
+                            <span class="font-medium">1 ${fromChain} = 1,234.56 ${toChain}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Network Fee</span>
+                            <span class="font-medium text-green-400">$0.00 (Free)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Estimated Time</span>
+                            <span class="font-medium">~30 seconds</span>
+                        </div>
+                    </div>
+                    <div class="bg-purple-600/10 border border-purple-500/30 rounded-xl p-4">
+                        <div class="flex items-start gap-2 text-sm text-purple-300">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span>BestPath AVS found the optimal route across 3 liquidity pools</span>
+                        </div>
+                    </div>
+                    <button onclick="executeTrade('${fromChain}', '${toChain}', ${amount}, ${toAmount})" class="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold py-3 px-6 rounded-xl hover:from-purple-700 hover:to-fuchsia-700 transition">
+                        Execute Trade
+                    </button>
+                </div>
+            `;
+            showModal('Confirm Trade', content);
+        }
+
+        async function executeTrade(fromChain, toChain, amount, toAmount) {
+            closeModal();
+            showLoading('Executing Trade', 'BestPath AVS is optimizing your route...');
+            
+            await new Promise(resolve => setTimeout(resolve, 3500));
+            
+            hideLoading();
+            showNotification(`Successfully traded ${amount} ${fromChain} → ${toAmount} ${toChain}`, 'success');
+            document.getElementById('trade-from').value = '';
+            document.getElementById('trade-to').value = '';
+            document.getElementById('trade-info').classList.add('hidden');
         }
     </script>
 </body>
