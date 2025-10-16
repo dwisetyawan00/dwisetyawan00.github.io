@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tria - Neo-Banking Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/yourlogo.png">
+    <style>
+        /* ========== GANTI LOGO & BRANDING DI SINI ========== */
+        :root {
+            --logo-url: url('https://i.imgur.com/yourlogo.png'); /* GANTI DENGAN URL LOGO ANDA */
+            --company-name: 'Tria'; /* GANTI NAMA COMPANY */
+            --tagline: 'Neo-Banking Platform'; /* GANTI TAGLINE */
+        }
+        /* ================================================== */
+        @keyframes slide-in {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-slide-in { animation: slide-in 0.3s ease-out; }
+        .animate-fade-in { animation: fade-in 0.3s ease-out; }
+        
+        /* Smooth transitions */
+        * { transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #818cf8; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white min-h-screen">
+
+    <!-- Notifications Container -->
+    <div id="notifications" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Header -->
+    <header class="border-b border-gray-800/50 bg-black/30 backdrop-blur-xl sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <!-- Logo akan muncul di sini, edit di bagian CSS :root -->
+                        <div id="logo-container" class="w-10 h-10 bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-black"></div>
+                    </div>
+                    <div>
+                        <span id="company-name" class="text-xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Tria</span>
+                        <div id="company-tagline" class="text-xs text-gray-400">Neo-Banking Platform</div>
+                    </div>
+                </div>
+                
+                <nav class="hidden lg:flex items-center gap-2">
+                    <button onclick="switchTab('home')" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-200" data-tab="home">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <span class="font-medium">Home</span>
+                    </button>
+                    <button onclick="switchTab('earn')" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-200" data-tab="earn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <span class="font-medium">Earn</span>
+                    </button>
+                    <button onclick="switchTab('card')" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-200" data-tab="card">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        <span class="font-medium">Card</span>
+                    </button>
+                    <button onclick="switchTab('trade')" class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl transition-all duration-200" data-tab="trade">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                        <span class="font-medium">Trade</span>
+                    </button>
+                </nav>
+
+                <button onclick="toggleMenu()" class="lg:hidden p-2 hover:bg-gray-800/50 rounded-xl transition">
+                    <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden lg:hidden mt-4 pb-4 space-y-2 animate-fade-in">
+                <button onclick="switchTab('home'); toggleMenu()" class="mobile-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition" data-tab="home">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="font-medium">Home</span>
+                </button>
+                <button onclick="switchTab('earn'); toggleMenu()" class="mobile-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition" data-tab="earn">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    <span class="font-medium">Earn</span>
+                </button>
+                <button onclick="switchTab('card'); toggleMenu()" class="mobile-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition" data-tab="card">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    <span class="font-medium">Card</span>
+                </button>
+                <button onclick="switchTab('trade'); toggleMenu()" class="mobile-tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl transition" data-tab="trade">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                    <span class="font-medium">Trade</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-24">
+        <!-- Home Tab -->
+        <div id="tab-home" class="tab-content">
+            <div class="space-y-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl sm:text-4xl font-bold mb-2"><span id="greeting"></span> <span id="greeting-emoji"></span></h1>
+                        <p class="text-gray-400">Here's what's happening with your assets</p>
+                    </div>
+                </div>
+
+                <!-- Balance Card -->
+                <div class="relative overflow-hidden bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 rounded-3xl p-8 shadow-2xl shadow-purple-500/30">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                    <div class="absolute bottom-0 left-0 w-48 h-48 bg-fuchsia-500/20 rounded-full blur-3xl -ml-24 -mb-24"></div>
+                    
+                    <div class="relative">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                <span class="text-white/80 font-medium">Total Portfolio Value</span>
+                            </div>
+                            <button onclick="toggleBalance()" class="p-2 hover:bg-white/10 rounded-lg transition">
+                                <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </button>
+                        </div>
+                        
+                        <div class="mb-8">
+                            <div id="balance-display" class="text-5xl sm:text-6xl font-bold mb-2">$5,247.83</div>
+                            <div class="flex items-center gap-2 text-white/80">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg>
+                                <span class="text-lg">+12.5% this month</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button onclick="showNotification('Add Funds modal opened')" class="flex-1 flex items-center justify-center gap-2 bg-white text-purple-600 font-semibold py-4 px-6 rounded-2xl hover:bg-gray-100 transition shadow-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                Add Funds
+                            </button>
+                            <button onclick="showNotification('Send modal opened')" class="flex-1 flex items-center justify-center gap-2 bg-white/20 backdrop-blur-sm text-white font-semibold py-4 px-6 rounded-2xl hover:bg-white/30 transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                Send
+                            </button>
+                            <button onclick="copyAddress()" class="flex-1 flex items-center justify-center gap-2 bg-white/20 backdrop-blur-sm text-white font-semibold py-4 px-6 rounded-2xl hover:bg-white/30 transition">
+                                <svg id="copy-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                <span id="copy-text">Receive</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border border-blue-500/30 rounded-2xl p-6 hover:border-blue-400/50 transition cursor-pointer group">
+                        <svg class="w-10 h-10 text-blue-400 mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <h3 class="text-xl font-bold mb-2">Zero Gas Fees</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Execute transactions across any blockchain without worrying about gas costs</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-600/20 to-purple-800/20 border border-purple-500/30 rounded-2xl p-6 hover:border-purple-400/50 transition cursor-pointer group">
+                        <svg class="w-10 h-10 text-purple-400 mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        <h3 class="text-xl font-bold mb-2">Self-Custodial</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Full control over your assets with institutional-grade security standards</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-600/20 to-green-800/20 border border-green-500/30 rounded-2xl p-6 hover:border-green-400/50 transition cursor-pointer group">
+                        <svg class="w-10 h-10 text-green-400 mb-4 group-hover:scale-110 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 class="text-xl font-bold mb-2">70+ Chains</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Seamless access to major blockchains including EVM, Solana, Cosmos and more</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earn Tab -->
+        <div id="tab-earn" class="tab-content hidden">
+            <div class="space-y-8">
+                <div>
+                    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Earn with Tria</h1>
+                    <p class="text-gray-400">Maximize your returns with optimized yield strategies</p>
+                </div>
+
+                <!-- Staking Calculator -->
+                <div class="bg-gradient-to-br from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold mb-6">Stake USDC</h3>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-300 mb-3">Amount to Stake</label>
+                        <div class="relative">
+                            <input id="stake-input" type="number" class="w-full bg-gray-900/50 border border-gray-700 text-white text-xl px-6 py-4 rounded-xl outline-none focus:border-green-500 transition" placeholder="0.00" oninput="calculateStake()">
+                            <button onclick="setMaxStake()" class="absolute right-3 top-1/2 -translate-y-1/2 text-sm bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg transition">Max</button>
+                        </div>
+                    </div>
+
+                    <div id="stake-results" class="bg-gray-900/50 border border-gray-700/50 rounded-xl p-5 mb-6 space-y-3 hidden">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Expected yearly return (15.2% APY)</span>
+                            <span id="yearly-return" class="font-bold text-green-400">$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Monthly earnings</span>
+                            <span id="monthly-return" class="font-bold">$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Daily earnings</span>
+                            <span id="daily-return" class="font-bold">$0.00</span>
+                        </div>
+                    </div>
+
+                    <button onclick="executeStake()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-4 px-6 rounded-xl hover:from-green-600 hover:to-emerald-600 transition shadow-lg shadow-green-500/30">
+                        Stake Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Tab -->
+        <div id="tab-card" class="tab-content hidden">
+            <div class="space-y-8">
+                <div>
+                    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Tria Card</h1>
+                    <p class="text-gray-400">Spend your crypto anywhere with Visa</p>
+                </div>
+
+                <!-- Virtual Card -->
+                <div class="max-w-md">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-fuchsia-500 rounded-3xl blur-2xl opacity-30"></div>
+                        <div class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black border border-gray-700 rounded-3xl p-8 shadow-2xl aspect-[1.586/1]">
+                            <div class="h-full flex flex-col justify-between">
+                                <div class="flex items-start justify-between">
+                                    <div class="w-14 h-14 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center shadow-lg">
+                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xs text-gray-400 mb-1">Powered by</div>
+                                        <div class="text-2xl font-bold">VISA</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="text-2xl font-mono tracking-widest mb-6">•••• •••• •••• 4242</div>
+                                    
+                                    <div class="flex justify-between items-end">
+                                        <div>
+                                            <div class="text-xs text-gray-400 mb-1">CARDHOLDER</div>
+                                            <div class="font-semibold text-lg">YOUR NAME</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-xs text-gray-400 mb-1">VALID THRU</div>
+                                            <div class="font-semibold">12/27</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="showNotification('Physical card request submitted!')" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-3 px-6 rounded-xl hover:from-green-600 hover:to-emerald-600 transition shadow-lg">
+                    Request Physical Card
+                </button>
+            </div>
+        </div>
+
+        <!-- Trade Tab -->
+        <div id="tab-trade" class="tab-content hidden">
+            <div class="space-y-8">
+                <div>
+                    <h1 class="text-3xl sm:text-4xl font-bold mb-2">Trade</h1>
+                    <p class="text-gray-400">Seamless cross-chain trading with BestPath AVS</p>
+                </div>
+
+                <!-- Trading Interface -->
+                <div class="bg-gray-900/50 backdrop-blur-sm border border-gray-800/50 rounded-2xl p-8 max-w-2xl">
+                    <div class="space-y-6">
+                        <!-- From -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-3">From</label>
+                            <div class="bg-gray-800/50 border border-gray-700 rounded-2xl p-5">
+                                <div class="flex items-center justify-between mb-4">
+                                    <select id="chain-from" class="bg-gray-700 text-white px-4 py-2 rounded-xl outline-none font-semibold cursor-pointer hover:bg-gray-600 transition">
+                                        <option>Ethereum</option>
+                                        <option>Polygon</option>
+                                        <option>Arbitrum</option>
+                                        <option>Solana</option>
+                                        <option>Bitcoin</option>
+                                    </select>
+                                    <input id="trade-from" type="number" class="bg-transparent text-right text-2xl font-bold outline-none w-40" placeholder="0.0" oninput="calculateTrade()">
+                                </div>
+                                <div class="flex justify-between text-sm text-gray-400">
+                                    <span>Balance: 1.2453 ETH</span>
+                                    <button onclick="setMaxTrade()" class="text-purple-400 hover:text-purple-300 font-medium">Max</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Swap Button -->
+                        <div class="flex justify-center">
+                            <button onclick="swapChains()" class="bg-gray-800 hover:bg-gray-700 p-3 rounded-xl transition-all hover:rotate-180 duration-300">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg>
+                            </button>
+                        </div>
+
+                        <!-- To -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-3">To</label>
+                            <div class="bg-gray-800/50 border border-gray-700 rounded-2xl p-5">
+                                <div class="flex items-center justify-between mb-4">
+                                    <select id="chain-to" class="bg-gray-700 text-white px-4 py-2 rounded-xl outline-none font-semibold cursor-pointer hover:bg-gray-600 transition">
+                                        <option>Ethereum</option>
+                                        <option selected>Polygon</option>
+                                        <option>Arbitrum</option>
+                                        <option>Solana</option>
+                                        <option>Bitcoin</option>
+                                    </select>
+                                    <input id="trade-to" type="number" readonly class="bg-transparent text-right text-2xl font-bold outline-none w-40 text-gray-400" placeholder="0.0">
+                                </div>
+                                <div class="flex justify-between text-sm text-gray-400">
+                                    <span>Balance: 847.32 MATIC</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trade Info -->
+                        <div id="trade-info" class="bg-purple-600/10 border border-purple-500/30 rounded-2xl p-5 space-y-3 hidden">
+                            <div class="flex items-center gap-2 text-purple-400 font-medium mb-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                <span>BestPath Route Optimized</span>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Network Fee</span>
+                                    <span class="font-semibold text-green-400">$0.00 (Free)</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">Est. Time</span>
+                                    <span class="font-semibold">~30 seconds</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="executeTrade()" class="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold py-4 px-6 rounded-xl hover:from-purple-700 hover:to-fuchsia-700 transition shadow-lg shadow-purple-500/30">
+                            Execute Trade
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800/50 bg-black/30 backdrop-blur-xl mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+            <div class="text-center">
+                <p class="text-gray-400 text-sm mb-2">Demo simulation of Tria platform · Not affiliated with tria.so</p>
+                <p class="text-gray-500 text-xs">Powered by BestPath AVS · Built for educational purposes</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ========== KONFIGURASI LOGO & BRANDING ========== 
+        const CONFIG = {
+            logoUrl: 'https://imgur.com/a/YprQQAU', // GANTI URL LOGO ANDA DI SINI
+            companyName: 'Tria', // GANTI NAMA COMPANY
+            tagline: 'Neo-Banking Platform', // GANTI TAGLINE
+            useCustomLogo: false // Set TRUE jika sudah punya logo, FALSE untuk pakai icon default
+        };
+        // ================================================
+
+        // State
+        let showBalanceState = true;
+        let currentBalance = 5247.83;
+        let currentTab = 'home';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeBranding();
+            updateGreeting();
+            switchTab('home');
+        });
+
+        // Initialize Branding
+        function initializeBranding() {
+            // Update document title & favicon
+            document.title = `${CONFIG.companyName} - ${CONFIG.tagline}`;
+            
+            // Update company name & tagline in header
+            document.getElementById('company-name').textContent = CONFIG.companyName;
+            document.getElementById('company-tagline').textContent = CONFIG.tagline;
+            
+            // Update logo if custom logo is provided
+            if (CONFIG.useCustomLogo && CONFIG.logoUrl !== 'https://i.imgur.com/yourlogo.png') {
+                const logoContainer = document.getElementById('logo-container');
+                logoContainer.innerHTML = '';
+                logoContainer.style.padding = '0';
+                logoContainer.style.overflow = 'hidden';
+                
+                const img = document.createElement('img');
+                img.src = CONFIG.logoUrl;
+                img.alt = CONFIG.companyName + ' logo';
+                img.className = 'w-full h-full object-cover';
+                img.onerror = function() {
+                    // If image fails to load, show default icon
+                    logoContainer.innerHTML = `
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                    `;
+                };
+                logoContainer.appendChild(img);
+                
+                // Update favicon
+                const favicon = document.querySelector("link[rel~='icon']");
+                if (favicon) {
+                    favicon.href = CONFIG.logoUrl;
+                }
+            }
+        }
+
+        // Greeting
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            let greeting, emoji;
+            
+            if (hour >= 5 && hour < 12) {
+                greeting = 'Good morning';
+                emoji = '☀️';
+            } else if (hour >= 12 && hour < 17) {
+                greeting = 'Good afternoon';
+                emoji = '🌤️';
+            } else if (hour >= 17 && hour < 22) {
+                greeting = 'Good evening';
+                emoji = '🌆';
+            } else {
+                greeting = 'Good night';
+                emoji = '🌙';
+            }
+            
+            document.getElementById('greeting').textContent = greeting;
+            document.getElementById('greeting-emoji').textContent = emoji;
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            
+            // Update desktop tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('bg-gradient-to-r', 'from-violet-600', 'to-fuchsia-600', 'text-white', 'shadow-lg', 'shadow-purple-500/30');
+                    btn.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-gray-800');
+                } else {
+                    btn.classList.remove('bg-gradient-to-r', 'from-violet-600', 'to-fuchsia-600', 'text-white', 'shadow-lg', 'shadow-purple-500/30');
+                    btn.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-gray-800');
+                }
+            });
+            
+            // Update mobile tab buttons
+            document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('bg-gradient-to-r', 'from-violet-600', 'to-fuchsia-600', 'text-white');
+                    btn.classList.remove('text-gray-400', 'hover:bg-gray-800/50');
+                } else {
+                    btn.classList.remove('bg-gradient-to-r', 'from-violet-600', 'to-fuchsia-600', 'text-white');
+                    btn.classList.add('text-gray-400', 'hover:bg-gray-800/50');
+                }
+            });
+        }
+
+        // Toggle Menu
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Toggle Balance
+        function toggleBalance() {
+            showBalanceState = !showBalanceState;
+            const display = document.getElementById('balance-display');
+            display.textContent = showBalanceState ? `${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••';
+        }
+
+        // Copy Address
+        function copyAddress() {
+            showNotification('Wallet address copied!');
+            document.getElementById('copy-text').textContent = 'Copied!';
+            document.getElementById('copy-icon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
+            
+            setTimeout(() => {
+                document.getElementById('copy-text').textContent = 'Receive';
+                document.getElementById('copy-icon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>';
+            }, 2000);
+        }
+
+        // Notifications
+        function showNotification(message) {
+            const container = document.getElementById('notifications');
+            const notif = document.createElement('div');
+            notif.className = 'bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in';
+            notif.innerHTML = `
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                ${message}
+            `;
+            container.appendChild(notif);
+            
+            setTimeout(() => {
+                notif.remove();
+            }, 3000);
+        }
+
+        // Stake Functions
+        function calculateStake() {
+            const amount = parseFloat(document.getElementById('stake-input').value);
+            const results = document.getElementById('stake-results');
+            
+            if (amount && amount > 0) {
+                const apy = 15.2;
+                const yearlyReturn = (amount * apy / 100);
+                const monthlyReturn = yearlyReturn / 12;
+                const dailyReturn = yearlyReturn / 365;
+                
+                document.getElementById('yearly-return').textContent = `${yearlyReturn.toFixed(2)}`;
+                document.getElementById('monthly-return').textContent = `${monthlyReturn.toFixed(2)}`;
+                document.getElementById('daily-return').textContent = `${dailyReturn.toFixed(2)}`;
+                
+                results.classList.remove('hidden');
+            } else {
+                results.classList.add('hidden');
+            }
+        }
+
+        function setMaxStake() {
+            document.getElementById('stake-input').value = '1000';
+            calculateStake();
+        }
+
+        function executeStake() {
+            const amount = document.getElementById('stake-input').value;
+            if (amount && parseFloat(amount) > 0) {
+                showNotification(`Successfully staked ${amount} in USDC pool`);
+                document.getElementById('stake-input').value = '';
+                document.getElementById('stake-results').classList.add('hidden');
+            } else {
+                showNotification('Please enter an amount to stake');
+            }
+        }
+
+        // Trade Functions
+        function calculateTrade() {
+            const amount = parseFloat(document.getElementById('trade-from').value);
+            const tradeInfo = document.getElementById('trade-info');
+            
+            if (amount && amount > 0) {
+                const rate = 1234.56;
+                document.getElementById('trade-to').value = (amount * rate).toFixed(2);
+                tradeInfo.classList.remove('hidden');
+            } else {
+                document.getElementById('trade-to').value = '';
+                tradeInfo.classList.add('hidden');
+            }
+        }
+
+        function setMaxTrade() {
+            document.getElementById('trade-from').value = '1.2453';
+            calculateTrade();
+        }
+
+        function swapChains() {
+            const fromSelect = document.getElementById('chain-from');
+            const toSelect = document.getElementById('chain-to');
+            
+            const temp = fromSelect.value;
+            fromSelect.value = toSelect.value;
+            toSelect.value = temp;
+        }
+
+        function executeTrade() {
+            const amount = document.getElementById('trade-from').value;
+            const fromChain = document.getElementById('chain-from').value;
+            const toChain = document.getElementById('chain-to').value;
+            
+            if (amount && parseFloat(amount) > 0) {
+                showNotification(`Trade executed: ${amount} ${fromChain} → ${toChain}`);
+                document.getElementById('trade-from').value = '';
+                document.getElementById('trade-to').value = '';
+                document.getElementById('trade-info').classList.add('hidden');
+            } else {
+                showNotification('Please enter an amount to trade');
+            }
+        }
+    </script>
+</body>
+</html>
