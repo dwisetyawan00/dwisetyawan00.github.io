@@ -1,58 +1,271 @@
-Terms of Service
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-Last updated: [isi tanggal]
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
 
-This application (“Service”) is a data analytics and reporting platform designed to
-connect with and aggregate user-authorized data from social media platforms,
-including but not limited to:
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-- Facebook
-- Instagram
-- YouTube
-- TikTok
-- Threads
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 20px;
+        }
 
-The Service is intended for analytical, monitoring, and reporting purposes only.
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
 
-1. Service Description  
-The Service connects to third-party platforms through official APIs and aggregates
-data such as account metrics, content performance, and engagement insights.
-All data access is strictly limited to permissions explicitly granted by the user.
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
 
-2. User Authorization  
-By using this Service, you confirm that you are the rightful owner of the connected
-accounts or have legitimate authorization to access and analyze the data.
-The Service does not access any data without user consent.
+        .header .last-updated {
+            font-size: 0.875rem;
+            color: #666;
+        }
 
-3. Data Usage  
-Aggregated data is used solely for:
-- Analytics
-- Performance analysis
-- Reporting and insights generation
+        .intro {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
 
-The Service does not modify, post, or take automated actions on user accounts unless
-explicitly stated and authorized.
+        .intro p {
+            margin-bottom: 12px;
+            color: #333;
+        }
 
-4. Third-Party Platforms  
-This Service is not affiliated with, endorsed by, or officially connected to
-Meta Platforms, Google, TikTok, or their respective subsidiaries.
-All platform usage complies with each provider’s API and data usage policies.
+        .intro ul {
+            list-style: none;
+            margin: 12px 0;
+            padding-left: 0;
+        }
 
-5. Limitation of Liability  
-The Service is provided on an “as is” and “as available” basis.
-We do not guarantee uninterrupted access or accuracy of data due to
-third-party platform limitations or API changes.
+        .intro ul li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #333;
+        }
 
-6. Termination  
-We reserve the right to suspend or terminate access to the Service if it is used in
-violation of these Terms or applicable platform policies.
+        .intro ul li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #666;
+        }
 
-7. Changes to Terms  
-These Terms may be updated from time to time. Continued use of the Service
-constitutes acceptance of the updated Terms.
+        .section {
+            margin-bottom: 24px;
+        }
 
-8. Contact  
-For questions or concerns regarding these Terms, please contact:
-Email: dwisetyawn619@email.com
+        .section h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
 
+        .section p {
+            margin-bottom: 10px;
+            color: #333;
+        }
 
+        .section ul {
+            list-style: none;
+            margin: 10px 0;
+            padding-left: 0;
+        }
+
+        .section ul li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #333;
+        }
+
+        .section ul li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #666;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e5e5e5;
+            margin: 24px 0;
+        }
+
+        .license {
+            background: transparent;
+            color: #666;
+            border-radius: 0;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .license p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .card {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>Terms of Service</h1>
+                <p class="last-updated">Last updated: January 20, 2026</p>
+            </div>
+
+            <div class="intro">
+                <p>This application ("Service") is a data analytics and reporting platform designed to connect with and aggregate user-authorized data from social media platforms, including but not limited to:</p>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Instagram</li>
+                    <li>YouTube</li>
+                    <li>TikTok</li>
+                    <li>Threads</li>
+                </ul>
+                <p>The Service is intended for analytical, monitoring, and reporting purposes only.</p>
+            </div>
+
+            <div class="section">
+                <h2>1. Service Description</h2>
+                <p>The Service connects to third-party platforms through official APIs and aggregates data such as account metrics, content performance, and engagement insights. All data access is strictly limited to permissions explicitly granted by the user through OAuth authorization.</p>
+            </div>
+
+            <div class="section">
+                <h2>2. User Authorization and Eligibility</h2>
+                <p>By using this Service, you confirm that:</p>
+                <ul>
+                    <li>You are at least 18 years of age or have parental consent</li>
+                    <li>You are the rightful owner of the connected accounts or have legitimate authorization to access and analyze the data</li>
+                    <li>You will use the Service in compliance with all applicable laws and regulations</li>
+                </ul>
+                <p>The Service does not access any data without explicit user consent.</p>
+            </div>
+
+            <div class="section">
+                <h2>3. Data Collection and Usage</h2>
+                <p>Aggregated data is collected and used solely for:</p>
+                <ul>
+                    <li>Analytics and performance metrics</li>
+                    <li>Content performance analysis</li>
+                    <li>Reporting and insights generation</li>
+                    <li>Service improvement and optimization</li>
+                </ul>
+                <p>The Service does not modify, post, delete, or take automated actions on user accounts unless explicitly stated and authorized. We do not sell, rent, or share your data with third parties for marketing purposes.</p>
+            </div>
+
+            <div class="section">
+                <h2>4. Data Security and Privacy</h2>
+                <p>We implement industry-standard security measures to protect your data. However, no method of transmission over the internet is 100% secure. You are responsible for maintaining the confidentiality of your account credentials.</p>
+            </div>
+
+            <div class="section">
+                <h2>5. Third-Party Platforms</h2>
+                <p>This Service is not affiliated with, endorsed by, or officially connected to Meta Platforms, Google, TikTok, or their respective subsidiaries. All platform usage complies with each provider's API Terms of Service and data usage policies. Changes to third-party APIs may affect Service functionality.</p>
+            </div>
+
+            <div class="section">
+                <h2>6. Acceptable Use</h2>
+                <p>You agree not to:</p>
+                <ul>
+                    <li>Use the Service for any illegal or unauthorized purpose</li>
+                    <li>Attempt to gain unauthorized access to any portion of the Service</li>
+                    <li>Interfere with or disrupt the Service or servers</li>
+                    <li>Use automated means to access the Service without permission</li>
+                    <li>Violate any third-party platform policies</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>7. Limitation of Liability</h2>
+                <p>The Service is provided on an "as is" and "as available" basis without warranties of any kind. We do not guarantee uninterrupted access, accuracy of data, or fitness for a particular purpose due to third-party platform limitations, API changes, or technical issues. To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, special, or consequential damages.</p>
+            </div>
+
+            <div class="section">
+                <h2>8. Termination</h2>
+                <p>We reserve the right to suspend or terminate access to the Service at any time if:</p>
+                <ul>
+                    <li>These Terms are violated</li>
+                    <li>Applicable platform policies are breached</li>
+                    <li>Fraudulent or harmful activity is detected</li>
+                </ul>
+                <p>You may terminate your use of the Service at any time by disconnecting your accounts and ceasing to use the platform.</p>
+            </div>
+
+            <div class="section">
+                <h2>9. Intellectual Property</h2>
+                <p>All content, features, and functionality of the Service are owned by the Service provider and are protected by international copyright, trademark, and other intellectual property laws. You retain all rights to your data and content.</p>
+            </div>
+
+            <div class="section">
+                <h2>10. Changes to Terms</h2>
+                <p>These Terms may be updated from time to time. We will notify users of material changes via email or through the Service. Continued use of the Service after changes constitutes acceptance of the updated Terms.</p>
+            </div>
+
+            <div class="section">
+                <h2>11. Governing Law</h2>
+                <p>These Terms shall be governed by and construed in accordance with applicable laws, without regard to conflict of law provisions.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2>12. Contact</h2>
+                <p>For questions, concerns, or requests regarding these Terms, please contact:</p>
+                <p>Email: Auth334@email.com</p>
+            </div>
+        </div>
+
+        <div class="license">
+            <p>Copyright 2026 techzs-copdev. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
