@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .header .last-updated {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .section p {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .section ul {
+            list-style: none;
+            margin: 10px 0;
+            padding-left: 0;
+        }
+
+        .section ul li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #333;
+        }
+
+        .section ul li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #666;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e5e5e5;
+            margin: 24px 0;
+        }
+
+        .license {
+            background: transparent;
+            color: #666;
+            border-radius: 0;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .license p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .card {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>Privacy Policy</h1>
+                <p class="last-updated">Last updated: January 20, 2026</p>
+            </div>
+
+            <div class="section">
+                <h2>1. Policy Scope</h2>
+                <p>This policy applies only if you deploy this application on your own infrastructure.</p>
+                <p>The seller does not collect any data from users because this is a source code product, not an online service.</p>
+            </div>
+
+            <div class="section">
+                <h2>2. Data Processed When You Deploy</h2>
+                <p>When you deploy this application, the system will store:</p>
+                <ul>
+                    <li>Social media accounts you connect (access tokens, account IDs)</li>
+                    <li>Content you schedule (titles, captions, media assets)</li>
+                    <li>User preferences (timezone, language, team roles)</li>
+                    <li>Activity logs (for internal audit purposes)</li>
+                </ul>
+                <p>All data is stored in your own database (SQLite/PostgreSQL) and is not sent to external parties.</p>
+            </div>
+
+            <div class="section">
+                <h2>3. Encryption and Security</h2>
+                <p>Social media access tokens are encrypted using AES-256-GCM before being stored.</p>
+                <p>User sessions utilize secure cookies with HttpOnly and SameSite=Strict attributes.</p>
+                <p>You are responsible for:</p>
+                <ul>
+                    <li>Protecting environment variables (CRON_SECRET, DATABASE_URL, etc.)</li>
+                    <li>Securing your deployment server</li>
+                    <li>Implementing proper access controls and authentication</li>
+                    <li>Regularly updating dependencies and security patches</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>4. Third-Party Integration</h2>
+                <p>When you connect Facebook, Instagram, YouTube, or other social media accounts, data is sent directly to those platforms via OAuth authentication.</p>
+                <p>No data is transmitted to the seller or any intermediary service.</p>
+                <p>Each third-party platform has its own privacy policy and terms of service that govern how your data is handled:</p>
+                <ul>
+                    <li>Meta Platforms (Facebook, Instagram, Threads): Meta Privacy Policy</li>
+                    <li>Google (YouTube): Google Privacy Policy</li>
+                    <li>TikTok: TikTok Privacy Policy</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>5. Data Retention</h2>
+                <p>Since you control the deployment and database, you have full control over data retention policies. You can:</p>
+                <ul>
+                    <li>Delete data at any time directly from your database</li>
+                    <li>Revoke social media account connections through the application interface</li>
+                    <li>Implement custom data retention policies based on your requirements</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>6. User Rights</h2>
+                <p>As the deployer and administrator of this application, you must ensure compliance with applicable data protection regulations (GDPR, CCPA, etc.) if you collect data from other users.</p>
+                <p>You are responsible for:</p>
+                <ul>
+                    <li>Providing appropriate privacy notices to your users</li>
+                    <li>Obtaining necessary consents for data processing</li>
+                    <li>Implementing data subject rights (access, deletion, portability)</li>
+                    <li>Maintaining records of processing activities</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>7. Cookies and Tracking</h2>
+                <p>The application uses essential cookies for:</p>
+                <ul>
+                    <li>Session management and authentication</li>
+                    <li>Security features (CSRF protection)</li>
+                    <li>User preference storage</li>
+                </ul>
+                <p>No analytics or third-party tracking cookies are implemented by default. Any such additions are at your discretion.</p>
+            </div>
+
+            <div class="section">
+                <h2>8. No Seller Data Collection</h2>
+                <p>The seller explicitly does not:</p>
+                <ul>
+                    <li>Collect, store, or process any user data from your deployment</li>
+                    <li>Have access to your database or server infrastructure</li>
+                    <li>Track usage analytics or telemetry from your deployment</li>
+                    <li>Require phone-home connections or license verification that transmits data</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>9. Changes to This Policy</h2>
+                <p>This policy applies to the version of the source code you have purchased.</p>
+                <p>Updates to this policy will be included in future releases. It is your responsibility to review the privacy policy when updating to newer versions.</p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section">
+                <h2>10. Contact</h2>
+                <p>For questions or concerns regarding this Privacy Policy, please contact:</p>
+                <p>Email: Auth334@gmail.com</p>
+            </div>
+        </div>
+
+        <div class="license">
+            <p>Copyright 2026 techzs-copdev. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
